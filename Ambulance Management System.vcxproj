@@ -127,7 +127,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CancelRequest.cpp" />
+    <ClCompile Include="Car.cpp" />
+    <ClCompile Include="Hospital.cpp" />
+    <ClCompile Include="Organiser.cpp" />
+    <ClCompile Include="Patient.cpp" />
     <ClCompile Include="Source.cpp" />
+    <ClCompile Include="UI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ADTs\ArrayStack.h" />
@@ -137,6 +143,12 @@
     <ClInclude Include="ADTs\priQueue.h" />
     <ClInclude Include="ADTs\QueueADT.h" />
     <ClInclude Include="ADTs\StackADT.h" />
+    <ClInclude Include="CancelRequest.h" />
+    <ClInclude Include="Car.h" />
+    <ClInclude Include="Hospital.h" />
+    <ClInclude Include="Organiser.h" />
+    <ClInclude Include="Patient.h" />
+    <ClInclude Include="UI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
