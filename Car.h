@@ -1,4 +1,18 @@
 #pragma once
+#include"Patient.h"
+enum class CAR_TYPE
+{
+	NORMAL_CAR,
+	SPECIAL_CAR
+};
+enum class CAR_STATUS
+{
+	READY,
+	ASSIGNED,
+	LOADED
+};
+
+
 class Car
 {
 	// Data Members
@@ -11,5 +25,21 @@ class Car
 	//		Assign Patient
 	//		Change Status
 	//		Drop Off Patient (sends patient to finish list and sets pointer to nullptr)
+
+private:
+	CAR_TYPE carType;
+	CAR_STATUS carStatus;
+	Patient* assignedPatient;
+	int HID;
+
+public:
+	Car(CAR_TYPE type, int hospitalID);
+	void SetStatus(CAR_STATUS status);
+	void AssignPatient(Patient* patient);
+	void PickUpPatient();
+	Patient* DropOffPatient();
+	CAR_TYPE GetType() const;
+	CAR_STATUS GetStatus() const;
+	int GetHospitalID() const;
 };
 
