@@ -1,6 +1,5 @@
-#include "Car.h"
 #pragma once
-enum PatientType
+enum PATIENT_TYPE
 {
 	NP,SP,EP
 };
@@ -18,26 +17,17 @@ private:
 	int PickUpTime;
 	int NearestHospitalID;
 	int DistanceToHospital;
-	PatientType Type;
+	PATIENT_TYPE Type;
 	int Severity;
-	Car* AssignedCar = nullptr;
 public:
-	Patient(PatientType type, int PID, int HID, int distance, int Severity);
+	Patient(PATIENT_TYPE type, int PID, int HID, int distance, int requestTime,int severity = 0);
 	int GetSeverity();
-
-	PatientType GetType();
-
+	int GetID();
+	PATIENT_TYPE GetType();
 	int GetPickUpTime();
-
-	bool IsAssigned();
-
 	void SetHID(int ID);
-
 	void SetDistance(int Distance);
-
-	void AssignCar(Car* assigned);
-
 	//idk
-	void Print();
+	//void Print();
 };
 

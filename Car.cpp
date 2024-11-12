@@ -1,7 +1,7 @@
 #include "Car.h"
 
 Car::Car(CAR_TYPE type, int hospitalID) : carType(type), carStatus(CAR_STATUS::READY),
-														assignedPatient(nullptr), HID(hospitalID) 
+														assignedPatient(nullptr), HID(hospitalID)
 {}
 
 void Car::SetStatus(CAR_STATUS status)
@@ -51,6 +51,15 @@ CAR_STATUS Car::GetStatus() const
 int Car::GetHospitalID() const
 {
 	return HID;
+}
+
+int Car::GetAssignedPatientID() const
+{
+	if (carStatus != CAR_STATUS::READY && assignedPatient)
+	{
+		return (assignedPatient->GetID());
+	}
+	return -1;
 }
 
 

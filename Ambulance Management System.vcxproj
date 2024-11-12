@@ -137,8 +137,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ADTs\ArrayStack.h" />
+    <ClInclude Include="ADTs\NPatientQueue.h" />
     <ClInclude Include="ADTs\LinkedQueue.h" />
     <ClInclude Include="ADTs\Node.h" />
+    <ClInclude Include="ADTs\OutCarsPriQueue.h" />
     <ClInclude Include="ADTs\priNode.h" />
     <ClInclude Include="ADTs\priQueue.h" />
     <ClInclude Include="ADTs\QueueADT.h" />

@@ -1,5 +1,5 @@
 #pragma once
-#include"Patient.h"
+#include "Patient.h"
 enum class CAR_TYPE
 {
 	NORMAL_CAR,
@@ -41,5 +41,6 @@ public:
 	CAR_TYPE GetType() const;
 	CAR_STATUS GetStatus() const;
 	int GetHospitalID() const;
+	int GetAssignedPatientID() const;
 };
 

@@ -1,11 +1,9 @@
 #include "Patient.h"
 
-Patient::Patient(PatientType type, int PID, int HID, int distance, int Severity = 0)
+Patient::Patient(PATIENT_TYPE type, int PID, int HID, int distance, int reqTime, int severity)
+	:PatientID(PID), NearestHospitalID(HID), Type(type), RequestTime(reqTime),
+	PickUpTime(-1), Severity(severity), DistanceToHospital(distance)
 {
-	this->Type = type;
-	PatientID = PID;
-	NearestHospitalID = HID;
-	DistanceToHospital = distance;
 }
 
 int Patient::GetSeverity()
@@ -13,7 +11,12 @@ int Patient::GetSeverity()
 	return Severity;
 }
 
-PatientType Patient::GetType()
+int Patient::GetID()
+{
+	return PatientID;
+}
+
+PATIENT_TYPE Patient::GetType()
 {
 	return Type;
 }
@@ -21,11 +24,6 @@ PatientType Patient::GetType()
 int Patient::GetPickUpTime()
 {
 	return PickUpTime;
-}
-
-bool Patient::IsAssigned()
-{
-	return AssignedCar != nullptr;
 }
 
 void Patient::SetHID(int ID)
@@ -36,9 +34,4 @@ void Patient::SetHID(int ID)
 void Patient::SetDistance(int Distance)
 {
 	Distance = DistanceToHospital;
-}
-
-void Patient::AssignCar(Car* assigned)
-{
-	AssignedCar = assigned;
 }

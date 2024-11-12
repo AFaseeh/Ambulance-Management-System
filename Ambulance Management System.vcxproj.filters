@@ -80,5 +80,11 @@
     <ClInclude Include="CancelRequest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ADTs\NPatientQueue.h">
+      <Filter>Header Files\ADTs</Filter>
+    </ClInclude>
+    <ClInclude Include="ADTs\OutCarsPriQueue.h">
+      <Filter>Header Files\ADTs</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
