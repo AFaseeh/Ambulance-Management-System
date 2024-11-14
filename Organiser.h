@@ -1,16 +1,20 @@
-#pragma once
-class Organiser
-{
-	// Data Members
-	//		All Patients			Queue
-	//		Cancellation List		Queue
-	//		Hospitals				Dynamic Array
-	//		Out Cars				Derived Priority Queue
-	//		Back Cars				Derived Priority Queue
-	//		Finished List			Queue
-	// 
-	// Functions
-	//		Load  
-	//		Switch from Out cars to Back cars
+#ifndef ORGANISER_H
+#define ORGANISER_H
+
+class Hospital;
+
+class Organiser {
+public:
+    Organiser(int size);
+    ~Organiser();
+    void addHospital(Hospital* hospital);
+    Hospital* getHospital(int index);
+    int getHospitalCount();
+
+private:
+    int capacity;
+    int count;
+    Hospital** hospitals;  
 };
 
+#endif  // ORGANISER_H
