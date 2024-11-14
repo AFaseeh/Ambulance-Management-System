@@ -1,16 +1,36 @@
 #pragma once
-class Hospital
-{
-	// Data Members
-	// Patients:
-	//		SP: Queue
-	//		EP: Priority Queue
-	//		NP: Derived Queue (to allow cancellation)
-	// Cars
-	//		Free Special Cars (SCars): Queue 
-	//		Free Normal Cars (NCars): Queue 
-	// 
-	// Functions
-	//		Assigns Patients to cars
+#include "ADTs/LinkedQueue.h"
+#include"ADTs/priQueue.h"
+#include "Car.h"
+#include"ADTs/NpatientQueue.h"
+#include "Organiser.h"
+
+
+
+#ifndef HOSPITAL_H
+#define HOSPITAL_H
+
+#include "Organiser.h"
+
+class Hospital {
+public:
+	Hospital(Organiser* organizer);
+	void addpatient(Patient* t);
+	void Assignpatient(Patient* t);
+	void cancelNPRequest(Patient* t);
+	Hospital* getNextHospital();
+	void returnCarToHospital(Patient* npPatient);
+	
+
+private:
+	Organiser* organizer;
+	LinkedQueue<Patient*> spQueue;        		priQueue<Patient*> epQueue;
+	NPatientQueue npQueue;
+
+	LinkedQueue<Car*> freeSpecialCars;
+	LinkedQueue<Car*> freeNormalCars;
 };
+
+#endif
+
 
