@@ -1,5 +1,4 @@
 #include "Organiser.h"
-#include "Organiser.h"
 #include "Hospital.h"
 
 #include <iostream>
