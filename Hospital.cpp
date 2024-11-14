@@ -96,11 +96,7 @@ void Hospital::cancelNPRequest(Patient* t) {
 }
 
 void Hospital::returnCarToHospital(Patient* npPatient) {
-    Car* assignedCar = nullptr;
-
-    if (assignedCar != nullptr) {
-        freeNormalCars.enqueue(assignedCar);
-    }
+ 
 }
 
 Hospital* Hospital::getNextHospital() {
