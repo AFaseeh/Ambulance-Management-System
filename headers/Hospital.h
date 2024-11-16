@@ -1,11 +1,11 @@
 #pragma once
 #ifndef HOSPITAL_H
 #define HOSPITAL_H
-#include "ADTs/LinkedQueue.h"
-#include"ADTs/priQueue.h"
-#include "Car.h"
-#include"ADTs/NpatientQueue.h"
+#include "../ADTs/LinkedQueue.h"
+#include"../ADTs/priQueue.h"
+#include"../ADTs/NpatientQueue.h"
 #include "Organiser.h"
+#include "Car.h"
 
 
 class Hospital {

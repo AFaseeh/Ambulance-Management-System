@@ -1,7 +1,7 @@
 #include <iostream>
-#include "ADTs/NPatientQueue.h"
-#include "ADTs/OutCarsPriQueue.h"
-#include "Patient.h"
+#include "../ADTs/NPatientQueue.h"
+#include "../ADTs/OutCarsPriQueue.h"
+#include "../headers/Patient.h"
 
 
 void Test_NPatientQueue() 

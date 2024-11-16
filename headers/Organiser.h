@@ -8,7 +8,6 @@ class Organiser {
 public:
     Organiser(int size);
     ~Organiser();
-    void LoadFile();
     void addHospital(Hospital* hospital);
     Hospital* getHospital(int index);
     int getHospitalCount();

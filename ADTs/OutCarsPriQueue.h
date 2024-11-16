@@ -1,6 +1,6 @@
 #pragma once
 #include "priQueue.h"
-#include "../Car.h"
+#include "../headers/Car.h"
 
 class OutCarsPriQueue : public priQueue<Car*>
 {

@@ -1,4 +1,4 @@
-#include "Patient.h"
+#include "../headers/Patient.h"
 
 Patient::Patient(PATIENT_TYPE type, int PID, int HID, int distance, int reqTime, int severity)
 	:PatientID(PID), NearestHospitalID(HID), Type(type), RequestTime(reqTime),

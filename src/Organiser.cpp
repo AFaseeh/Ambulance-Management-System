@@ -1,7 +1,9 @@
-#include "Organiser.h"
-#include "Hospital.h"
+#include "../headers/Organiser.h"
+#include "../headers/Hospital.h"
 
 #include <iostream>
+#include <fstream>
+
 class Hospital;
 
 Organiser::Organiser(int size) {

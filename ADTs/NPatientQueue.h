@@ -1,6 +1,6 @@
 #pragma once
 #include "LinkedQueue.h"
-#include "../Patient.h"
+#include "../headers/Patient.h"
 
 class NPatientQueue : public LinkedQueue<Patient*>
 {

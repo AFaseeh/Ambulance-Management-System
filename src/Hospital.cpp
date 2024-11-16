@@ -1,4 +1,4 @@
-#include "Hospital.h"
+#include "../headers/Hospital.h"
 #include <iostream>
 
 Hospital::Hospital(Organiser* organizer) : organizer(organizer) {}
