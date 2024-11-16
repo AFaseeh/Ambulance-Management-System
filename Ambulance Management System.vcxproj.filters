@@ -39,6 +39,9 @@
     <ClCompile Include="CancelRequest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ADTs\NPatientQueue.cpp">
+      <Filter>Header Files\ADTs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ADTs\ArrayStack.h">

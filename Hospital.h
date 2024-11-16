@@ -1,16 +1,12 @@
 #pragma once
+#ifndef HOSPITAL_H
+#define HOSPITAL_H
 #include "ADTs/LinkedQueue.h"
 #include"ADTs/priQueue.h"
 #include "Car.h"
 #include"ADTs/NpatientQueue.h"
 #include "Organiser.h"
 
-
-
-#ifndef HOSPITAL_H
-#define HOSPITAL_H
-
-#include "Organiser.h"
 
 class Hospital {
 public:
@@ -24,13 +20,11 @@ public:
 
 private:
 	Organiser* organizer;
-	LinkedQueue<Patient*> spQueue;        		priQueue<Patient*> epQueue;
+	LinkedQueue<Patient*> spQueue;        		
+	priQueue<Patient*> epQueue;
 	NPatientQueue npQueue;
 
 	LinkedQueue<Car*> freeSpecialCars;
 	LinkedQueue<Car*> freeNormalCars;
 };
-
 #endif
-
-

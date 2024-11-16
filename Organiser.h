@@ -1,3 +1,4 @@
+#pragma once
 #ifndef ORGANISER_H
 #define ORGANISER_H
 
@@ -16,5 +17,4 @@ private:
     int count;
     Hospital** hospitals;  
 };
-
-#endif  // ORGANISER_H
+#endif // ORGANISER_H
