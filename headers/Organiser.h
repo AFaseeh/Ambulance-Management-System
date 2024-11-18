@@ -3,19 +3,22 @@
 #include "../ADTs/OutCarsPriQueue.h"
 #include "../headers/UI.h"
 #include "Hospital.h"
+#include "CancelRequest.h"
 
 class Organiser {
 private:
+	int** distanceMatrix;
 	int speedSC;	//speed of special cars
 	int speedNC;	// Speed of normal cars
 	UI* ui;
 	int hospitalNumber;
 	Hospital** hospitals;		// Array of pointers to Hospital objects
-	OutCarsPriQueue* OutCars;
-	priQueue<Car*>* BackCars;
-	QueueADT<Patient*>* CancelledRequest;
-	QueueADT<Patient*>* FinishedRequest;
-	QueueADT<Patient*>* AllPatients;
+	OutCarsPriQueue OutCars;
+	priQueue<Car*> BackCars;
+	LinkedQueue<CancelRequest*> CancelledRequest;
+	LinkedQueue<Patient*> FinishedRequest;
+	LinkedQueue<Patient*> AllPatients;
+	int pendingRequests;
 
 public:
 	Organiser();

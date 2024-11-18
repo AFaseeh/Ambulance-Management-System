@@ -129,6 +129,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ADTs\NPatientQueue.cpp" />
+    <ClCompile Include="src\CancelRequest.cpp" />
     <ClCompile Include="src\Car.cpp" />
     <ClCompile Include="src\Hospital.cpp" />
     <ClCompile Include="src\Organiser.cpp" />
@@ -146,6 +147,7 @@
     <ClInclude Include="ADTs\priQueue.h" />
     <ClInclude Include="ADTs\QueueADT.h" />
     <ClInclude Include="ADTs\StackADT.h" />
+    <ClInclude Include="headers\CancelRequest.h" />
     <ClInclude Include="headers\Car.h" />
     <ClInclude Include="headers\Hospital.h" />
     <ClInclude Include="headers\Organiser.h" />

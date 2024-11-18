@@ -2,7 +2,7 @@
 #include "../headers/Organiser.h"
 #include <iostream>
 
-Hospital::Hospital(Organiser* organiser) : organiser(organiser) {}
+Hospital::Hospital(Organiser* organiser, int id) : organiser(organiser) , hospitalID(id){}
 
 void Hospital::addpatient(Patient* t) {
     switch (t->GetType()) {
@@ -94,6 +94,14 @@ void Hospital::cancelNPRequest(Patient* t) {
             npQueue.enqueue(npPatient);
         }
     }
+}
+
+void Hospital::LoadCars(int sCars, int nCars)
+{
+    //for (int i = 0; i < sCars, i++)
+    //{
+    //    car*
+    //}
 }
 
 //Hospital* Hospital::getNextHospital() {
