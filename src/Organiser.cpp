@@ -5,17 +5,15 @@
 #include <iostream>
 using namespace std;
 
-class Hospital;
-
 Organiser::Organiser() {
     LoadFile();
 }
 
 Organiser::~Organiser() {
     for (int i = 0; i < hospitalNumber; ++i) {
-   //     delete hospitals[i];
+        delete hospitals[i];
     }
-   // delete[] hospitals;
+    delete[] hospitals;
 }
 
 void Organiser::UpdateTimeStep(int time)

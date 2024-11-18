@@ -1,8 +1,8 @@
 #include "../headers/Hospital.h"
+#include "../headers/Organiser.h"
 #include <iostream>
 
-//Hospital::Hospital(Organiser* organizer) : organizer(organizer) {}
-Hospital::Hospital(){}
+Hospital::Hospital(Organiser* organiser) : organiser(organiser) {}
 
 void Hospital::addpatient(Patient* t) {
     switch (t->GetType()) {

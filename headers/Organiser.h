@@ -10,7 +10,7 @@ private:
 	int speedNC;	// Speed of normal cars
 	UI* ui;
 	int hospitalNumber;
-	//Hospital** hospitals;		// Array of pointers to Hospital objects
+	Hospital** hospitals;		// Array of pointers to Hospital objects
 	OutCarsPriQueue* OutCars;
 	priQueue<Car*>* BackCars;
 	QueueADT<Patient*>* CancelledRequest;
@@ -23,7 +23,7 @@ public:
 
 	void UpdateTimeStep(int time);				// Gets called Every timestep
 	void LoadFile();					// Loads file at program startup
-	//Hospital* getHospital(int index);	
+	Hospital* getHospital(int index);	
 	void Addout_Car(Car* car);
 	void SwitchOutToBack();
 	void AddPatient(Patient* patient);		//add patient to allPatients queue
