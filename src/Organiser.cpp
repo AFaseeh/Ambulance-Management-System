@@ -20,9 +20,46 @@ Organiser::~Organiser() {
     delete[] hospitals;
 }
 
+
 void Organiser::UpdateTimeStep()
 {
-
+	for (int i = 0; i < count; i++) {
+		int random = rand() % 100+1;
+        if (random >= 91 && random<95) {
+            //move car from back to free list of its hospital
+            //Car* car;
+            //int priority;
+			//BackCars->dequeue(car,priority);
+			//hospitals[i]->returnCarToHospital();
+            
+        }
+        else if (random >= 80 && random<90) {
+        //move car from out to back list
+			
+            SwitchOut_Car();
+            
+        }
+        else if (random >= 70 && random<75) {
+            // take a patient from all patients and assign to car 
+            Patient* patient;
+            // need a function to send out a specific car in hospital or create a dummy normal patient ?
+			/*AllPatients->dequeue(patient);
+            hospitals[i]->Assignpatient(patient);*/
+        }
+        else if (random >= 40&& random <45) {
+			//same as above but for special car
+        }
+        else if (random >= 30 && random<40) {
+			//move NP patient to finished
+        }
+        else if (random >= 20 && random <25)
+        {
+			//move EP patient to finished
+        }
+        else if (random >= 10 && random<20) {
+			//move SP patient to finished
+        }
+	}
 }
 
 void Organiser::LoadFile()
@@ -52,14 +89,14 @@ int Organiser::getHospitalCount() {
     return count;
 }
 
-void Organiser::AddBack_Car(Car* car)
+void Organiser::Addout_Car(Car* car)
 {
 
     //Distance to hospital / speed of car
     int priority;
 
 
-    BackCars->enqueue(car, priority);
+    OutCars->enqueue(car, priority);
 }
 
 //switch car from back to out
@@ -67,8 +104,8 @@ void Organiser::SwitchOut_Car()
 {
 	Car* car;
     int time;
-	BackCars->dequeue(car, time);
-    OutCars->enqueue(car, time);
+    OutCars->dequeue(car, time);
+	BackCars->enqueue(car, time);
 }
 
 void Organiser::AddPatient(Patient* patient)

@@ -65,7 +65,7 @@ public:
 	int getHospitalCount();
 
 	// add car to backCars queue
-	void AddBack_Car(Car* car);
+	void Addout_Car(Car* car);
 
 	// add car to outCars queue
 	void SwitchOut_Car();
