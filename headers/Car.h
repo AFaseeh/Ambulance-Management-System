@@ -30,6 +30,7 @@ private:
 	CAR_TYPE carType;
 	CAR_STATUS carStatus;
 	Patient* assignedPatient;
+	int TimeStepLeft;
 	int HID;
 
 public:

@@ -1,15 +1,16 @@
 #include "../headers/Organiser.h"
 #include "../headers/Hospital.h"
-
+#include "../headers/Patient.h"
+#include "../headers/Car.h"
 #include <iostream>
-#include <fstream>
+using namespace std;
 
 class Hospital;
 
 Organiser::Organiser(int size) {
-    capacity = size;
+    hospitalNumber = size;
     count = 0;
-    hospitals = new Hospital * [capacity];
+    hospitals = new Hospital * [hospitalNumber];
 }
 
 Organiser::~Organiser() {
@@ -19,8 +20,19 @@ Organiser::~Organiser() {
     delete[] hospitals;
 }
 
+void Organiser::UpdateTimeStep()
+{
+
+}
+
+void Organiser::LoadFile()
+{
+    //load data (speedNC,speddSC, hospitals, allpatient)
+}
+
+//FASEH
 void Organiser::addHospital(Hospital* hospital) {
-    if (count < capacity) {
+    if (count < hospitalNumber) {
         hospitals[count] = hospital;
         ++count;
     }
@@ -38,4 +50,47 @@ Hospital* Organiser::getHospital(int index) {
 
 int Organiser::getHospitalCount() {
     return count;
+}
+
+void Organiser::AddBack_Car(Car* car)
+{
+
+    //Distance to hospital / speed of car
+    int priority;
+
+
+    BackCars->enqueue(car, priority);
+}
+
+//switch car from back to out
+void Organiser::SwitchOut_Car()
+{
+	Car* car;
+    int time;
+	BackCars->dequeue(car, time);
+    OutCars->enqueue(car, time);
+}
+
+void Organiser::AddPatient(Patient* patient)
+{
+    AllPatients->enqueue(patient);
+}
+
+void Organiser::CancellRequest(int PID)
+{
+  
+
+}
+
+void Organiser::FinishRequest(Patient* patient)
+{
+    //check if patient can be finished or not
+    //if (OutCars->dequeue(patient->GetID(),)) {
+    //	FinishedRequest->enqueue(patient);
+    //}
+}
+
+void Organiser::assignPatientToHospital(Patient* patient)
+{
+ 
 }
