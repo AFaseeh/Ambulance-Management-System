@@ -1,29 +1,26 @@
 #include "../headers/Organiser.h"
-#include "../headers/Hospital.h"
-#include "../headers/Patient.h"
-#include "../headers/Car.h"
+//#include "../headers/Hospital.h"
+//#include "../headers/Patient.h"
+//#include "../headers/Car.h"
 #include <iostream>
 using namespace std;
 
 class Hospital;
 
-Organiser::Organiser(int size) {
-    hospitalNumber = size;
-    count = 0;
-    hospitals = new Hospital * [hospitalNumber];
+Organiser::Organiser() {
+    LoadFile();
 }
 
 Organiser::~Organiser() {
-    for (int i = 0; i < count; ++i) {
-        delete hospitals[i];
+    for (int i = 0; i < hospitalNumber; ++i) {
+   //     delete hospitals[i];
     }
-    delete[] hospitals;
+   // delete[] hospitals;
 }
 
-
-void Organiser::UpdateTimeStep()
+void Organiser::UpdateTimeStep(int time)
 {
-	for (int i = 0; i < count; i++) {
+	for (int i = 0; i < hospitalNumber; i++) {
 		int random = rand() % 100+1;
         if (random >= 91 && random<95) {
             //move car from back to free list of its hospital
@@ -36,12 +33,12 @@ void Organiser::UpdateTimeStep()
         else if (random >= 80 && random<90) {
         //move car from out to back list
 			
-            SwitchOut_Car();
+            SwitchOutToBack();
             
         }
         else if (random >= 70 && random<75) {
             // take a patient from all patients and assign to car 
-            Patient* patient;
+            //Patient* patient;
             // need a function to send out a specific car in hospital or create a dummy normal patient ?
 			/*AllPatients->dequeue(patient);
             hospitals[i]->Assignpatient(patient);*/
@@ -68,39 +65,28 @@ void Organiser::LoadFile()
 }
 
 //FASEH
-void Organiser::addHospital(Hospital* hospital) {
-    if (count < hospitalNumber) {
-        hospitals[count] = hospital;
-        ++count;
-    }
-    else {
-        std::cout << "Organiser is full, cannot add more hospitals." << std::endl;
-    }
-}
 
+/*
 Hospital* Organiser::getHospital(int index) {
-    if (index >= 0 && index < count) {
-        return hospitals[index];
+    if (index >= 0 && index < hospitalNumber) {
+        //return hospitals[index];
     }
     return nullptr;
 }
-
-int Organiser::getHospitalCount() {
-    return count;
-}
+*/
 
 void Organiser::Addout_Car(Car* car)
 {
 
     //Distance to hospital / speed of car
-    int priority;
+    int priority = 5;
 
 
     OutCars->enqueue(car, priority);
 }
 
 //switch car from back to out
-void Organiser::SwitchOut_Car()
+void Organiser::SwitchOutToBack()
 {
 	Car* car;
     int time;
@@ -113,21 +99,10 @@ void Organiser::AddPatient(Patient* patient)
     AllPatients->enqueue(patient);
 }
 
-void Organiser::CancellRequest(int PID)
-{
-  
-
-}
-
 void Organiser::FinishRequest(Patient* patient)
 {
     //check if patient can be finished or not
     //if (OutCars->dequeue(patient->GetID(),)) {
     //	FinishedRequest->enqueue(patient);
     //}
-}
-
-void Organiser::assignPatientToHospital(Patient* patient)
-{
- 
 }

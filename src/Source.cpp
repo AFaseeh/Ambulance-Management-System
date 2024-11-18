@@ -2,6 +2,7 @@
 #include "../ADTs/NPatientQueue.h"
 #include "../ADTs/OutCarsPriQueue.h"
 #include "../headers/Patient.h"
+#include "../headers/Organiser.h"
 
 
 void Test_NPatientQueue() 
@@ -82,6 +83,7 @@ void Test_OutCarsPriQueue()
 
 int main()
 {
+	Organiser o;
 	std::cout << "Hello, World\n";
 	return 0;
 }

@@ -30,18 +30,21 @@ private:
 	CAR_TYPE carType;
 	CAR_STATUS carStatus;
 	Patient* assignedPatient;
-	int TimeStepLeft;
+	int totalTimestep; //
+	int timestepLeft;
 	int HID;
 
 public:
 	Car(CAR_TYPE type, int hospitalID);
 	void SetStatus(CAR_STATUS status);
 	void AssignPatient(Patient* patient);
-	void PickUpPatient();
-	Patient* DropOffPatient();
+	void PickUpPatient();		// Car status ->Loaded
+	Patient* DropOffPatient();	// Car status ->Ready
 	CAR_TYPE GetType() const;
 	CAR_STATUS GetStatus() const;
 	int GetHospitalID() const;
 	int GetAssignedPatientID() const;
+	int GetTimeStepLeft() const;
+	
 };
 

@@ -10,7 +10,7 @@ public:
 	void print();
 };
 
-Car* OutCarsPriQueue::cancelRequest(int pid)
+inline Car* OutCarsPriQueue::cancelRequest(int pid)
 {
 	int trashcan = -1;
 	priNode<Car*>* p = head;

@@ -24,6 +24,7 @@ void Car::PickUpPatient()
 		return;
 
 	this->carStatus = CAR_STATUS::LOADED;
+	timestepLeft = totalTimestep;
 }
 
 Patient* Car::DropOffPatient()
@@ -58,6 +59,15 @@ int Car::GetAssignedPatientID() const
 	if (carStatus != CAR_STATUS::READY && assignedPatient)
 	{
 		return (assignedPatient->GetID());
+	}
+	return -1;
+}
+
+int Car::GetTimeStepLeft() const
+{
+	if (carStatus != CAR_STATUS::READY)
+	{
+		return timestepLeft;
 	}
 	return -1;
 }
