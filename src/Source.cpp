@@ -37,12 +37,12 @@ void Test_NPatientQueue()
 }
 void Test_OutCarsPriQueue()
 {
-	Car* c1 = new Car(CAR_TYPE::NORMAL_CAR, 1);
-	Car* c2 = new Car(CAR_TYPE::NORMAL_CAR, 1);
-	Car* c3 = new Car(CAR_TYPE::NORMAL_CAR, 1);
-	Car* c4 = new Car(CAR_TYPE::NORMAL_CAR, 1);
-	Car* c5 = new Car(CAR_TYPE::NORMAL_CAR, 1);
-	Car* c6 = new Car(CAR_TYPE::NORMAL_CAR, 1);
+	Car* c1 = new Car(CAR_TYPE::NORMAL_CAR, 1, -1);
+	Car* c2 = new Car(CAR_TYPE::NORMAL_CAR, 1, -1);
+	Car* c3 = new Car(CAR_TYPE::NORMAL_CAR, 1, -1);
+	Car* c4 = new Car(CAR_TYPE::NORMAL_CAR, 1, -1);
+	Car* c5 = new Car(CAR_TYPE::NORMAL_CAR, 1, -1);
+	Car* c6 = new Car(CAR_TYPE::NORMAL_CAR, 1, -1);
 	Patient* p1 = new Patient(PATIENT_TYPE::NP, 1, 1, 1, 1);
 	Patient* p2 = new Patient(PATIENT_TYPE::NP, 2, 1, 1, 1);
 	Patient* p3 = new Patient(PATIENT_TYPE::NP, 3, 1, 1, 1);
@@ -84,6 +84,7 @@ void Test_OutCarsPriQueue()
 int main()
 {
 	Organiser o;
+	o.SimulatorFunc();
 	std::cout << "Hello, World\n";
 	return 0;
 }
