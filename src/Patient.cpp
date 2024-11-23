@@ -1,46 +1,49 @@
 #include "../headers/Patient.h"
 
 Patient::Patient(PATIENT_TYPE type, int PID, int HID, int distance, int reqTime, int severity)
-	:PatientID(PID), NearestHospitalID(HID), Type(type), RequestTime(reqTime),
+	:PatientID(PID), HID(HID), Type(type), RequestTime(reqTime),
 	PickUpTime(-1), Severity(severity), DistanceToHospital(distance)
 {
 }
 
-int Patient::GetSeverity()
+int Patient::GetSeverity() const
 {
 	return Severity;
 }
 
-int Patient::GetID()
+int Patient::GetID() const
 {
 	return PatientID;
 }
 
-PATIENT_TYPE Patient::GetType()
+PATIENT_TYPE Patient::GetType() const
 {
 	return Type;
 }
 
-int Patient::GetPickUpTime()
+int Patient::GetPickUpTime() const
 {
 	return PickUpTime;
 }
 
+int Patient::GetHID() const
+{
+	return HID;
+}
+
 void Patient::SetHID(int ID)
 {
-	ID = NearestHospitalID;
+	HID = ID;
 }
 
 void Patient::SetDistance(int Distance)
 {
-	Distance = DistanceToHospital;
+	DistanceToHospital = Distance;
 }
 
 std::ostream& operator<<(std::ostream& os, const Patient& p)
 {
 	// TODO: insert return statement here
-	std::cout << "PatientID: " << p.PatientID << std::endl;
-
-
+	std::cout << p.PatientID;
 	return os;
 }
