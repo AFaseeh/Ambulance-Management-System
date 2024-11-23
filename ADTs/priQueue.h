@@ -9,8 +9,10 @@ class priQueue
 {
 protected:
     priNode<T>* head;
+    int count;
 public:
-    priQueue() : head(nullptr) {}
+    priQueue()
+        : head(nullptr) , count(0) {}
 
     ~priQueue() {
         T tmp;
@@ -26,6 +28,7 @@ public:
             
             newNode->setNext(head);
             head = newNode;
+            count++;
             return;
         }
        
@@ -35,6 +38,7 @@ public:
         }
         newNode->setNext( current->getNext());
         current->setNext( newNode);        
+        count++;
     }
 
     bool dequeue(T& topEntry, int& pri) {
@@ -45,6 +49,7 @@ public:
         priNode<T>* temp = head;
         head = head->getNext();
         delete temp;
+        count--;
         return true;
     }
 
@@ -59,5 +64,21 @@ public:
 
     bool isEmpty() const {
         return head == nullptr;
+    }
+
+    int getCount() const
+    {
+        return count;
+    }
+    
+    void printList() const
+    {
+        int trashOutput = -1;
+        priNode<T>* temp = head;
+        while (temp)
+        {
+            cout << *(temp->getItem(trashOutput)) << ", ";
+            temp = temp->getNext();
+        }
     }
 };
