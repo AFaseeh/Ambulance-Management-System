@@ -2,7 +2,8 @@
 #include "../headers/Organiser.h"
 #include <iostream>
 
-Hospital::Hospital(Organiser* organiser, int id) : organiser(organiser) , hospitalID(id){}
+Hospital::Hospital(Organiser* organiser, int id) : organiser(organiser) , hospitalID(id)
+{}
 
 void Hospital::addpatient(Patient* t) {
     switch (t->GetType()) {
@@ -98,10 +99,61 @@ void Hospital::cancelNPRequest(Patient* t) {
 
 void Hospital::LoadCars(int sCars, int nCars)
 {
-    //for (int i = 0; i < sCars, i++)
-    //{
-    //    car*
-    //}
+    for (int i = 0; i < sCars; i++)
+    {
+        Car* c = new Car(CAR_TYPE::SPECIAL_CAR, hospitalID, i);
+        freeSpecialCars.enqueue(c);
+    }
+
+    for (int i = 0; i < nCars; i++)
+    {
+        Car* c = new Car(CAR_TYPE::NORMAL_CAR, hospitalID, i);
+        freeNormalCars.enqueue(c);
+    }
+}
+
+void Hospital::CarBack(Car* car)
+{
+    if (car->GetType() == CAR_TYPE::NORMAL_CAR)
+    {
+        freeNormalCars.enqueue(car);
+    }
+    else
+    {
+        freeSpecialCars.enqueue(car);
+    }
+}
+
+Car* Hospital::OutCar(CAR_TYPE type)
+{
+    Car* toreturn = nullptr;
+    if (type == CAR_TYPE::SPECIAL_CAR)
+        freeSpecialCars.dequeue(toreturn);
+    else
+        freeNormalCars.dequeue(toreturn);
+    return toreturn;
+}
+
+Patient* Hospital::FinishSP()
+{
+    Patient* toreturn = nullptr;
+    spQueue.dequeue(toreturn);
+    return toreturn;
+}
+
+Patient* Hospital::FinishEP()
+{
+    Patient* toreturn = nullptr;
+    int pri = -1;
+    epQueue.dequeue(toreturn, pri);
+    return toreturn;
+}
+
+Patient* Hospital::FinishNP()
+{
+    Patient* toreturn = nullptr;
+    npQueue.dequeue(toreturn);
+    return toreturn;
 }
 
 //Hospital* Hospital::getNextHospital() {
@@ -115,3 +167,24 @@ void Hospital::LoadCars(int sCars, int nCars)
 //    return nullptr;
 //}
 
+ostream& operator<<(ostream& os, const Hospital& h)
+{
+    // TODO: insert return statement here
+    cout << "================= HOSPITAL #" << h.hospitalID + 1 << "data ====================" << endl;
+
+    //EP
+    cout << h.epQueue.getCount() << " EP requests: "; h.epQueue.printList(); cout << endl;
+
+    //SP
+    cout << h.spQueue.getCount() << " SP requests: "; h.spQueue.printList(); cout << endl;
+    
+    //NP
+    cout << h.npQueue.getCount() << " NP requests: "; h.npQueue.printList(); cout << endl;
+
+    //Free cars
+    cout << "Free Cars: " << h.freeSpecialCars.getCount() << " SCars, " << h.freeNormalCars.getCount() << " NCars" << endl;
+
+    cout << "================= HOSPITAL #" << h.hospitalID + 1 << "data end ====================" << endl;
+
+    return os;
+}
