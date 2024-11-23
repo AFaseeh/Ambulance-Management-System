@@ -17,16 +17,17 @@ private:
 	int PatientID;
 	int RequestTime;
 	int PickUpTime;
-	int NearestHospitalID;
+	int HID;
 	int DistanceToHospital;
 	PATIENT_TYPE Type;
 	int Severity;
 public:
 	Patient(PATIENT_TYPE type, int PID, int HID, int distance, int requestTime,int severity = 0);
-	int GetSeverity();
-	int GetID();
-	PATIENT_TYPE GetType();
-	int GetPickUpTime();
+	int GetSeverity() const;
+	int GetID() const;
+	PATIENT_TYPE GetType() const;
+	int GetPickUpTime() const;
+	int GetHID() const;
 	void SetHID(int ID);
 	void SetDistance(int Distance);
 	friend std::ostream& operator<<(std::ostream& os, const Patient& p);
