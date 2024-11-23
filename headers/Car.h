@@ -30,12 +30,13 @@ private:
 	CAR_TYPE carType;
 	CAR_STATUS carStatus;
 	Patient* assignedPatient;
-	int totalTimestep; //
-	int timestepLeft;
-	int HID;
+	//int totalTimestep;
+	//int timestepLeft;
+	int HID;	// 0-indexed	
+	int CID;	// 0-indexed
 
 public:
-	Car(CAR_TYPE type, int hospitalID);
+	Car(CAR_TYPE type, int hospitalID, int cid);
 	void SetStatus(CAR_STATUS status);
 	void AssignPatient(Patient* patient);
 	void PickUpPatient();		// Car status ->Loaded
@@ -45,6 +46,6 @@ public:
 	int GetHospitalID() const;
 	int GetAssignedPatientID() const;
 	int GetTimeStepLeft() const;
-	
+	friend std::ostream& operator<<(std::ostream& os, const Car& c);
 };
 

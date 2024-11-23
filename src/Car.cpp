@@ -1,7 +1,7 @@
 #include "../headers/Car.h"
 
-Car::Car(CAR_TYPE type, int hospitalID) : carType(type), carStatus(CAR_STATUS::READY),
-														assignedPatient(nullptr), HID(hospitalID)
+Car::Car(CAR_TYPE type, int hospitalID, int cid) : carType(type), carStatus(CAR_STATUS::READY),
+														assignedPatient(nullptr), HID(hospitalID), CID(cid)
 {}
 
 void Car::SetStatus(CAR_STATUS status)
@@ -24,7 +24,7 @@ void Car::PickUpPatient()
 		return;
 
 	this->carStatus = CAR_STATUS::LOADED;
-	timestepLeft = totalTimestep;
+	/*timestepLeft = totalTimestep;*/
 }
 
 Patient* Car::DropOffPatient()
@@ -67,9 +67,18 @@ int Car::GetTimeStepLeft() const
 {
 	if (carStatus != CAR_STATUS::READY)
 	{
-		return timestepLeft;
+		//return timestepLeft;
 	}
 	return -1;
 }
 
+std::ostream& operator<<(std::ostream& os, const Car& c)
+{
+	char Type = (c.carType == CAR_TYPE::NORMAL_CAR ? 'N' : 'S');
+	int pid = c.GetAssignedPatientID();
 
+	// +1 to make it 1-indexed
+	std::cout << Type << c.CID + 1 << "_H" << c.HID + 1 << "_P" << pid;
+
+	return os;
+}
