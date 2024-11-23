@@ -18,7 +18,7 @@ private:
 	LinkedQueue<CancelRequest*> CancelledRequest;
 	LinkedQueue<Patient*> FinishedRequest;
 	LinkedQueue<Patient*> AllPatients;
-	int pendingRequests;
+	int numOfRequests;
 
 public:
 	Organiser();
@@ -45,4 +45,7 @@ public:
 
 	////Collect statistics that are needed to create output file
 	//void print();
+
+	//Phase 1.2
+	void SimulatorFunc();
 };
