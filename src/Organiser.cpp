@@ -256,11 +256,11 @@ void Organiser::SwitchOutToBack()
     // Calculate return to hospital time and push it with this priority
     // time = ...
 	BackCars.enqueue(car, time);
-}
+    }
 
 void Organiser::AddPatient(Patient* patient)
 {
-    AllPatients.enqueue(patient);
+   AllPatients.enqueue(patient);
 }
 
 void Organiser::PrintInfo()
