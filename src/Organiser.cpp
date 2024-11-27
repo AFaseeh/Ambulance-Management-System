@@ -4,6 +4,7 @@
 //#include "../headers/Car.h"
 #include "../headers/CancelRequest.h"
 #include <iostream>
+#include <string>
 using namespace std;
 
 Organiser::Organiser()
@@ -24,14 +25,11 @@ Organiser::~Organiser() {
 void Organiser::UpdateTimeStep(int time)
 {
 	for (int i = 0; i < hospitalNumber; i++) {
-        cout << "\033[2J\033[H"; // Clears window
-        cout << "Current Timestep: " << time << endl;
-
-        cout << *hospitals[i];
 		int random = rand() % 100+1;
+        string message;
         if (random >= 91 && random<95) {
             //move car from back to free list of its hospital
-            cout << "Move From Back to free" << endl;
+            message = "Move From Back to free\n";
             Car* car = nullptr;
             int priority;
 			BackCars.dequeue(car,priority);
@@ -48,35 +46,32 @@ void Organiser::UpdateTimeStep(int time)
         }
         else if (random >= 70 && random<75) {
             // take a patient from all patients and assign to car 
-            //Patient* patient;
             // need a function to send out a specific car in hospital or create a dummy normal patient ?
-			/*AllPatients->dequeue(patient);
-            hospitals[i]->Assignpatient(patient);*/
 
-            cout << "Moving NCar from hospital[" << i << "] to Free out list CID: ";
+            message = "Moving NCar from hospital[" + std::to_string(i) + "] to Free out list CID: ";
             Car* free = hospitals[i]->OutCar(CAR_TYPE::NORMAL_CAR);
             if (free)
             {
-                cout << *free << endl;
+                message = message + std::to_string(free->GetCarID()) + "\n";
                 OutCars.enqueue(free, 0);
             }
             else
             {
-                cout << endl;
+                message = message + "-1\n";
             }
         }
         else if (random >= 40&& random <45) {
 			//same as above but for special car
-            cout << "Moving SCar from hospital[" << i << "] to Free out list CID: ";
+            message =  "Moving SCar from hospital[" + std::to_string(i) +"] to Free out list CID: ";
             Car* free = hospitals[i]->OutCar(CAR_TYPE::SPECIAL_CAR);
             if (free)
             {
-                cout << *free << endl;
+                message = message + std::to_string(free->GetCarID()) + "\n";
                 OutCars.enqueue(free, 0);
             }
             else
             {
-                cout << endl;
+                message = message + "-1\n";
             }
         }
         else if (random >= 30 && random<40) {
@@ -85,60 +80,54 @@ void Organiser::UpdateTimeStep(int time)
             Patient* free = hospitals[i]->FinishNP();
             if (free)
             {
-                cout << *free << endl;
+                message = message + std::to_string(free->GetID()) + "\n";
                 FinishedRequest.enqueue(free);
             }
             else
             {
-                cout << endl;
+                message = message + "-1\n";
             }
         }
         else if (random >= 20 && random <25)
         {
 			//move EP patient to finished
-            cout << "Moving EP from hospital[" << i << "] to finish list PID: ";
+            message = "Moving EP from hospital[" + std::to_string(i) + "] to finish list PID: ";
             Patient* free = hospitals[i]->FinishEP();
             if (free)
             {
-                cout << *free << endl;
+                message = message + std::to_string(free->GetID()) + "\n";
                 FinishedRequest.enqueue(free);
             }
             else
             {
-                cout << endl;
+                message = message + "-1\n";
             }
         }
         else if (random >= 10 && random<20) {
 			//move SP patient to finished
-            cout << "Moving SP from hospital[" << i << "] to finish list PID: ";
+            cout << "Moving SP from hospital[" + std::to_string(i) + "] to finish list PID: ";
             Patient* free = hospitals[i]->FinishSP();
             if (free)
             {
-                cout << *free << endl;
+                message = message + std::to_string(free->GetID()) + "\n";
                 FinishedRequest.enqueue(free);
             }
             else
             {
-                cout << endl;
+                message = message + "-1\n";
             }
         }
 
-        cout << *hospitals[i];
+        ui->PrintTimeStep(this, time, hospitals[i], message);
 
-        cout << "----------------------------------------" << endl;
-        cout << OutCars.getCount() << " ==> Out cars: "; OutCars.printList(); cout << endl;
-        cout << BackCars.getCount() << " ==> Back cars: "; BackCars.printList(); cout << endl;
-        cout << "----------------------------------------" << endl;
-        cout << FinishedRequest.getCount() << " finished patients: "; FinishedRequest.printList(); cout << endl;
-        cout << AllPatients.getCount() << " All patients: "; AllPatients.printList(); cout << endl;
 
         if (FinishedRequest.getCount() == numOfRequests)
         {
-            cout << "Finished Simulation" << endl;
+            ui->PrintMessage("Finished Simulation");
             return;
         }
 
-        cout << "enter any value to continue" << endl;
+        ui->PrintMessage("Enter any value to continue");
 	}
 }
 
@@ -228,7 +217,6 @@ void Organiser::LoadFile()
         CancelledRequest.enqueue(req);
     }
 }
-*/
 
 void Organiser::Addout_Car(Car* car)
 {
@@ -255,12 +243,13 @@ void Organiser::AddPatient(Patient* patient)
     AllPatients.enqueue(patient);
 }
 
-void Organiser::FinishRequest(Patient* patient)
+void Organiser::PrintInfo()
 {
-    //check if patient can be finished or not
-    //if (OutCars->dequeue(patient->GetID(),)) {
-    //	FinishedRequest->enqueue(patient);
-    //}
+    cout << "----------------------------------------" << endl;
+    cout << OutCars.getCount() << " ==> Out cars: "; OutCars.printList(); cout << endl;
+    cout << BackCars.getCount() << " ==> Back cars: "; BackCars.printList(); cout << endl;
+    cout << "----------------------------------------" << endl;
+    cout << FinishedRequest.getCount() << " finished patients: "; FinishedRequest.printList(); cout << endl;
 }
 
 void Organiser::SimulatorFunc()
