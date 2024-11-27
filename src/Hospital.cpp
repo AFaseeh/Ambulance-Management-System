@@ -79,24 +79,6 @@ void Hospital::Assignpatient(Patient* t) {
     //}
 }
 
-void Hospital::cancelNPRequest(Patient* t) {
-    if (t == nullptr) {
-        return;
-    }
-
-    if (!npQueue.isEmpty()) {
-        Patient* npPatient = nullptr;
-        npQueue.dequeue(npPatient);
-
-        if (npPatient != nullptr && npPatient->GetID() == t->GetID()) {
-            // returnCarToHospital(npPatient);
-        }
-        else {
-            npQueue.enqueue(npPatient);
-        }
-    }
-}
-
 void Hospital::LoadCars(int sCars, int nCars)
 {
     for (int i = 0; i < sCars; i++)
@@ -156,20 +138,8 @@ Patient* Hospital::FinishNP()
     return toreturn;
 }
 
-//Hospital* Hospital::getNextHospital() {
-//    for (int i = 0; i < organizer->getHospitalCount(); ++i) {
-//        Hospital* hospital = organizer->getHospital(i);
-//
-//        if (hospital != this && (!hospital->freeNormalCars.isEmpty() || !hospital->freeSpecialCars.isEmpty())) {
-//            return hospital;
-//        }
-//    }
-//    return nullptr;
-//}
-
 ostream& operator<<(ostream& os, const Hospital& h)
 {
-    // TODO: insert return statement here
     cout << "================= HOSPITAL #" << h.hospitalID + 1 << "data ====================" << endl;
 
     //EP

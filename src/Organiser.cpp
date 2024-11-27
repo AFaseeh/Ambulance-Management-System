@@ -228,23 +228,13 @@ void Organiser::LoadFile()
         CancelledRequest.enqueue(req);
     }
 }
-
-/*
-Hospital* Organiser::getHospital(int index) {
-    if (index >= 0 && index < hospitalNumber) {
-        //return hospitals[index];
-    }
-    return nullptr;
-}
 */
 
 void Organiser::Addout_Car(Car* car)
 {
-
-    //Distance to hospital / speed of car
-    int priority = 5;
-
-
+    // Priority Should be calculated
+    // Distance to hospital / speed of car
+    int priority = -1;
     OutCars.enqueue(car, priority);
 }
 
@@ -254,6 +244,9 @@ void Organiser::SwitchOutToBack()
 	Car* car;
     int time;
     OutCars.dequeue(car, time);
+
+    // Calculate return to hospital time and push it with this priority
+    // time = ...
 	BackCars.enqueue(car, time);
 }
 

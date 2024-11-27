@@ -45,7 +45,7 @@ public:
 	CAR_STATUS GetStatus() const;
 	int GetHospitalID() const;
 	int GetAssignedPatientID() const;
-	int GetTimeStepLeft() const;
+	int GetCarID() const;
 	friend std::ostream& operator<<(std::ostream& os, const Car& c);
 };
 

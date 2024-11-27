@@ -24,7 +24,6 @@ void Car::PickUpPatient()
 		return;
 
 	this->carStatus = CAR_STATUS::LOADED;
-	/*timestepLeft = totalTimestep;*/
 }
 
 Patient* Car::DropOffPatient()
@@ -63,13 +62,9 @@ int Car::GetAssignedPatientID() const
 	return -1;
 }
 
-int Car::GetTimeStepLeft() const
+int Car::GetCarID() const
 {
-	if (carStatus != CAR_STATUS::READY)
-	{
-		//return timestepLeft;
-	}
-	return -1;
+	return CID;
 }
 
 std::ostream& operator<<(std::ostream& os, const Car& c)
