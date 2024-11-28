@@ -59,7 +59,7 @@ void Organiser::UpdateTimeStep(int time)
             // take a patient from all patients and assign to car 
             // need a function to send out a specific car in hospital or create a dummy normal patient ?
 
-            message = "Moving NCar from hospital[" + std::to_string(i) + "] to Free out list CID: ";
+            message = "Moving NCar from hospital[" + std::to_string(i) + "] to out list CID: ";
             Car* free = hospitals[i]->OutCar(CAR_TYPE::NORMAL_CAR);
             if (free)
             {
@@ -73,7 +73,7 @@ void Organiser::UpdateTimeStep(int time)
         }
         else if (random >= 40&& random <45) {
 			//same as above but for special car
-            message =  "Moving SCar from hospital[" + std::to_string(i) +"] to Free out list CID: ";
+            message =  "Moving SCar from hospital[" + std::to_string(i) +"] to out list CID: ";
             Car* free = hospitals[i]->OutCar(CAR_TYPE::SPECIAL_CAR);
             if (free)
             {
@@ -267,7 +267,7 @@ void Organiser::PrintInfo()
 void Organiser::SimulatorFunc()
 {
     LoadFile();
-
+    
     for (int i = 0; i < numOfRequests; i++)
     {
         Patient* p = nullptr;

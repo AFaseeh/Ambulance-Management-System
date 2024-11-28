@@ -85,6 +85,5 @@ int main()
 {
 	Organiser o;
 	o.SimulatorFunc();
-	std::cout << "Hello, World\n";
 	return 0;
 }

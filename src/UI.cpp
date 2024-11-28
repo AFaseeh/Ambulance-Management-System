@@ -7,9 +7,13 @@ using namespace std;
 
 string UI::Loadfile()
 {
-	cout << "Enter File Name: ";
+	cout << "Enter File Name (enter \"-1\" for default file): ";
 	string fname;
 	cin >> fname;
+	if (strcmp("-1", fname.c_str()) == 0)
+	{
+		fname = "Test1";
+	}
 
 	return ("./TextFiles/Input/" + fname + ".txt");
 }
