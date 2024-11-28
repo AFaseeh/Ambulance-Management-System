@@ -5,6 +5,21 @@
 Hospital::Hospital(Organiser* organiser, int id) : organiser(organiser) , hospitalID(id)
 {}
 
+Hospital::~Hospital()
+{
+    Car* c = nullptr;
+    while (freeNormalCars.dequeue(c))
+    {
+        if (c)
+            delete c;
+    }
+    while (freeNormalCars.dequeue(c))
+    {
+        if (c)
+            delete c;
+    }
+}
+
 void Hospital::addpatient(Patient* t) {
     switch (t->GetType()) {
     case NP:

@@ -18,6 +18,7 @@ private:
 
 public:
 	Hospital(Organiser* organiser, int id);
+	~Hospital();
 	void addpatient(Patient* t);
 	void Assignpatient(Patient* t);
 	void LoadCars(int sCars, int nCars);

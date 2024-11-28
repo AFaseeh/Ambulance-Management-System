@@ -20,6 +20,14 @@ Organiser::~Organiser() {
     }
     delete[] hospitals;
     delete[] distanceMatrix;
+
+    for (int i = 0; i < numOfRequests; i++)
+    {
+        Patient* p = nullptr;
+        AllPatients.dequeue(p);
+        if (p)
+            delete p;
+    }
 }
 
 void Organiser::UpdateTimeStep(int time)
