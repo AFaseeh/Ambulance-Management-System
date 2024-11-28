@@ -21,7 +21,8 @@ void UI::Error(std::string errorMessage)
 
 void UI::PrintTimeStep(Organiser* org, int time, Hospital* hospital, string message)
 {
-	cout << "\033[2J\033[H"; // Clears window
+	//cout << "\033[2J\033[H"; // Clears window
+	system("cls");
 	cout << "Current Timestep: " << time << endl;
 	cout << message;
 	cout << *hospital;
