@@ -8,8 +8,6 @@
 class Organiser {
 private:
 	int** distanceMatrix;
-	int speedSC;	//speed of special cars
-	int speedNC;	// Speed of normal cars
 	int hospitalNumber;
 	int numOfRequests;
 	UI* ui;

@@ -2,6 +2,7 @@
 #include "../headers/Hospital.h"
 #include "../headers/Organiser.h"
 #include <iostream>
+#include <conio.h>
 using namespace std;
 
 string UI::Loadfile()
@@ -21,14 +22,16 @@ void UI::Error(std::string errorMessage)
 
 void UI::PrintTimeStep(Organiser* org, int time, Hospital* hospital, string message)
 {
-	cout << "\033[2J\033[H"; // Clears window
+	system("cls"); // Clears window
 	cout << "Current Timestep: " << time << endl;
 	cout << message;
 	cout << *hospital;
 
 	org->PrintInfo();
-	int x;
-	//cin >> x;
+	cout << "Enter any value to continue" << endl;
+
+	char ch = _getch();
+
 }
 
 void UI::PrintMessage(string message)

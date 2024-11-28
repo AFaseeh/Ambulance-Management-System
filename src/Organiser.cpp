@@ -8,7 +8,7 @@
 using namespace std;
 
 Organiser::Organiser()
-    : speedNC(-1), speedSC(-1), numOfRequests(-1), hospitals(nullptr), hospitalNumber(-1), distanceMatrix(nullptr)
+    : numOfRequests(-1), hospitals(nullptr), hospitalNumber(-1), distanceMatrix(nullptr)
 {
     ui = new UI;
 }
@@ -29,20 +29,31 @@ void Organiser::UpdateTimeStep(int time)
         string message;
         if (random >= 91 && random<95) {
             //move car from back to free list of its hospital
-            message = "Move From Back to free\n";
+            message = "Move From Back to free ";
             Car* car = nullptr;
             int priority;
 			BackCars.dequeue(car,priority);
             if (car)
+            {
                 hospitals[car->GetHospitalID()]->CarBack(car);
+                message = message + "\n";
+            }
+            else
+                message = message + "(No available car)\n";
         }
         else if (random >= 80 && random<90) {
         //move car from out to back list
+            message = "Move from Out to Back ";
             int trashOutPut = -1;
             Car* c = nullptr;
             OutCars.dequeue(c, trashOutPut);
             if (c)
+            {
                 BackCars.enqueue(c, trashOutPut);
+                message = message + "\n";
+            }
+            else
+                message = message + "(No available car)\n";
         }
         else if (random >= 70 && random<75) {
             // take a patient from all patients and assign to car 
@@ -57,7 +68,7 @@ void Organiser::UpdateTimeStep(int time)
             }
             else
             {
-                message = message + "-1\n";
+                message = message + "No available car\n";
             }
         }
         else if (random >= 40&& random <45) {
@@ -71,12 +82,12 @@ void Organiser::UpdateTimeStep(int time)
             }
             else
             {
-                message = message + "-1\n";
+                message = message + "No available car\n";
             }
         }
         else if (random >= 30 && random<40) {
 			//move NP patient to finished
-            cout << "Moving NP from hospital[" << i << "] to finish list PID: ";
+            message = "Moving NP from hospital[" + std::to_string(i) + "] to finish list PID: ";
             Patient* free = hospitals[i]->FinishNP();
             if (free)
             {
@@ -85,7 +96,7 @@ void Organiser::UpdateTimeStep(int time)
             }
             else
             {
-                message = message + "-1\n";
+                message = message + "No available Patient\n";
             }
         }
         else if (random >= 20 && random <25)
@@ -100,12 +111,12 @@ void Organiser::UpdateTimeStep(int time)
             }
             else
             {
-                message = message + "-1\n";
+                message = message + "No available Patient\n";
             }
         }
         else if (random >= 10 && random<20) {
 			//move SP patient to finished
-            cout << "Moving SP from hospital[" + std::to_string(i) + "] to finish list PID: ";
+            message =  "Moving SP from hospital[" + std::to_string(i) + "] to finish list PID: ";
             Patient* free = hospitals[i]->FinishSP();
             if (free)
             {
@@ -114,7 +125,7 @@ void Organiser::UpdateTimeStep(int time)
             }
             else
             {
-                message = message + "-1\n";
+                message = message + "No available Patient\n";
             }
         }
 
@@ -126,8 +137,6 @@ void Organiser::UpdateTimeStep(int time)
             ui->PrintMessage("Finished Simulation");
             return;
         }
-
-        ui->PrintMessage("Enter any value to continue");
 	}
 }
 
@@ -152,7 +161,10 @@ void Organiser::LoadFile()
     }
 
     // Loading Speed of Cars
+    int speedSC, speedNC;
     fin >> speedSC >> speedNC;
+    Car::SetStaticSpeedNC(speedNC);
+    Car::SetStaticSpeedSC(speedSC);
 
     // Distance Matrix of size (hospitalNum * hospitalNum)
     distanceMatrix = new int* [hospitalNumber];

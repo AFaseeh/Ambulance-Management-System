@@ -140,7 +140,7 @@ Patient* Hospital::FinishNP()
 
 ostream& operator<<(ostream& os, const Hospital& h)
 {
-    cout << "================= HOSPITAL #" << h.hospitalID + 1 << "data ====================" << endl;
+    cout << "================= HOSPITAL #" << h.hospitalID << " data ====================" << endl;
 
     //EP
     cout << h.epQueue.getCount() << " EP requests: "; h.epQueue.printList(); cout << endl;
@@ -154,7 +154,7 @@ ostream& operator<<(ostream& os, const Hospital& h)
     //Free cars
     cout << "Free Cars: " << h.freeSpecialCars.getCount() << " SCars, " << h.freeNormalCars.getCount() << " NCars" << endl;
 
-    cout << "================= HOSPITAL #" << h.hospitalID + 1 << "data end ====================" << endl;
+    cout << "================= HOSPITAL #" << h.hospitalID << " data end ====================" << endl;
 
     return os;
 }

@@ -34,6 +34,9 @@ private:
 	//int timestepLeft;
 	int HID;	// 0-indexed	
 	int CID;	// 0-indexed
+	int speed;
+	static int staticSpeedNC;
+	static int staticSpeedSC;
 
 public:
 	Car(CAR_TYPE type, int hospitalID, int cid);
@@ -47,5 +50,8 @@ public:
 	int GetAssignedPatientID() const;
 	int GetCarID() const;
 	friend std::ostream& operator<<(std::ostream& os, const Car& c);
+	static void SetStaticSpeedNC(int staticSpeedNC);
+	static void SetStaticSpeedSC(int speedsc);
+	int GetSpeed() const;
 };
 

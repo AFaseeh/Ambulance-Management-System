@@ -1,8 +1,20 @@
 #include "../headers/Car.h"
 
+int Car::staticSpeedNC = -1;
+int Car::staticSpeedSC = -1;
+
 Car::Car(CAR_TYPE type, int hospitalID, int cid) : carType(type), carStatus(CAR_STATUS::READY),
 														assignedPatient(nullptr), HID(hospitalID), CID(cid)
-{}
+{
+	if (type == CAR_TYPE::NORMAL_CAR)
+	{
+		speed = staticSpeedNC;
+	}
+	else
+	{
+		speed = staticSpeedSC;
+	}
+}
 
 void Car::SetStatus(CAR_STATUS status)
 {
@@ -67,13 +79,28 @@ int Car::GetCarID() const
 	return CID;
 }
 
+void Car::SetStaticSpeedNC(int speednc)
+{
+	staticSpeedNC = speednc;
+}
+
+void Car::SetStaticSpeedSC(int speedsc)
+{
+	staticSpeedSC = speedsc;
+}
+
+int Car::GetSpeed() const
+{
+	return speed;
+}
+
 std::ostream& operator<<(std::ostream& os, const Car& c)
 {
 	char Type = (c.carType == CAR_TYPE::NORMAL_CAR ? 'N' : 'S');
 	int pid = c.GetAssignedPatientID();
 
 	// +1 to make it 1-indexed
-	std::cout << Type << c.CID + 1 << "_H" << c.HID + 1 << "_P" << pid;
+	std::cout << Type << c.CID << "_H" << c.HID << "_P" << pid;
 
 	return os;
 }
