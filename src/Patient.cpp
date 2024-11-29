@@ -31,6 +31,11 @@ int Patient::GetHID() const
 	return HID;
 }
 
+int Patient::GetRequestTime() const
+{
+	return RequestTime;
+}
+
 void Patient::SetHID(int ID)
 {
 	HID = ID;

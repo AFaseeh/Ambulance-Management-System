@@ -28,6 +28,7 @@ public:
 	PATIENT_TYPE GetType() const;
 	int GetPickUpTime() const;
 	int GetHID() const;
+	int GetRequestTime() const;
 	void SetHID(int ID);
 	void SetDistance(int Distance);
 	friend std::ostream& operator<<(std::ostream& os, const Patient& p);

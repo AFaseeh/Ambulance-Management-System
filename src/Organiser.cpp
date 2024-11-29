@@ -275,17 +275,25 @@ void Organiser::PrintInfo()
 void Organiser::SimulatorFunc()
 {
     LoadFile();
-    
-    for (int i = 0; i < numOfRequests; i++)
-    {
-        Patient* p = nullptr;
-        AllPatients.dequeue(p);
-        hospitals[p->GetHID()]->addpatient(p);
-    }
 
     int count = 0;
     while (FinishedRequest.getCount() != numOfRequests && ++count)
     {
+        SendPatientsToHospital(count);
         UpdateTimeStep(count);
+    }
+}
+
+void Organiser::SendPatientsToHospital(int time)
+{
+    Patient* p = nullptr;
+    AllPatients.peek(p);
+    while (p && p->GetRequestTime() == time)
+    {
+        AllPatients.dequeue(p);
+        hospitals[p->GetHID()]->addpatient(p);
+
+        p = nullptr;
+        AllPatients.peek(p);
     }
 }

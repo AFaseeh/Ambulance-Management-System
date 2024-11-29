@@ -33,4 +33,5 @@ public:
 
 	//Phase 1.2
 	void SimulatorFunc();
+	void SendPatientsToHospital(int time);
 };
