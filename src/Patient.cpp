@@ -46,6 +46,11 @@ void Patient::SetDistance(int Distance)
 	DistanceToHospital = Distance;
 }
 
+int Patient::getDistance() const
+{
+	return DistanceToHospital;
+}
+
 std::ostream& operator<<(std::ostream& os, const Patient& p)
 {
 	// TODO: insert return statement here

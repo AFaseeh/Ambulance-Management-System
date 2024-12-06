@@ -31,6 +31,7 @@ public:
 	int GetRequestTime() const;
 	void SetHID(int ID);
 	void SetDistance(int Distance);
+	int getDistance() const;
 	friend std::ostream& operator<<(std::ostream& os, const Patient& p);
 	//idk
 	//void Print();

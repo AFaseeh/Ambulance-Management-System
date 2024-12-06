@@ -25,9 +25,10 @@ public:
 	void UpdateTimeStep(int time);		// Gets called Every timestep
 	void LoadFile();					// Loads file at program startup
 	void Addout_Car(Car* car);			//											**
-	void SwitchOutToBack();				// Puts front of "Outcars" into "Backcars"	**
+	bool SwitchOutToBack();				// Puts front of "Outcars" into "Backcars"	**
 	void AddPatient(Patient* patient);	// add patient to allPatients queue			**
-
+	bool returnCar();			//											**
+	void cancelRequest(int timestep);	//											**
 	// Collect statistics that are needed to create output file
 	void PrintInfo();
 

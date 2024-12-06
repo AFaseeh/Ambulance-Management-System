@@ -30,8 +30,8 @@ private:
 	CAR_TYPE carType;
 	CAR_STATUS carStatus;
 	Patient* assignedPatient;
-	//int totalTimestep;
-	//int timestepLeft;
+	int totalTimestep;
+	int timestepLeft;
 	int HID;	// 0-indexed	
 	int CID;	// 0-indexed
 	int speed;
@@ -46,9 +46,13 @@ public:
 	Patient* DropOffPatient();	// Car status ->Ready
 	CAR_TYPE GetType() const;
 	CAR_STATUS GetStatus() const;
+	void settotaltime();
+	void setTimestepLeft(int);
+	int getTotaltime() const;
 	int GetHospitalID() const;
 	int GetAssignedPatientID() const;
 	int GetCarID() const;
+	int GetTimestepLeft() const;
 	friend std::ostream& operator<<(std::ostream& os, const Car& c);
 	static void SetStaticSpeedNC(int staticSpeedNC);
 	static void SetStaticSpeedSC(int speedsc);

@@ -83,7 +83,8 @@ void Test_OutCarsPriQueue()
 
 int main()
 {
-	Organiser o;
-	o.SimulatorFunc();
+	Organiser *o;
+	o = new Organiser();	
+	o->SimulatorFunc();
 	return 0;
 }

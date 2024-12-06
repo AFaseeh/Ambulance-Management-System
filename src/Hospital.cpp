@@ -34,6 +34,11 @@ void Hospital::addpatient(Patient* t) {
     }
 }
 
+Patient* Hospital::removepatient(int pid)
+{
+   return npQueue.cancelRequest(pid);
+}
+
 void Hospital::Assignpatient(Patient* t) {
     //if (!epQueue.isEmpty()) {
     //    Patient* p;

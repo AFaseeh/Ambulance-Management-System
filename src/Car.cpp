@@ -14,6 +14,7 @@ Car::Car(CAR_TYPE type, int hospitalID, int cid) : carType(type), carStatus(CAR_
 	{
 		speed = staticSpeedSC;
 	}
+	timestepLeft = 3;
 }
 
 void Car::SetStatus(CAR_STATUS status)
@@ -60,6 +61,16 @@ CAR_STATUS Car::GetStatus() const
 	return carStatus;
 }
 
+//void Car::setTimestepLeft(int current)
+//{
+//	timestepLeft = current+this->getTotaltime();
+//}
+
+int Car::getTotaltime() const
+{
+	return assignedPatient->getDistance() / speed;
+}
+
 int Car::GetHospitalID() const
 {
 	return HID;
@@ -77,6 +88,11 @@ int Car::GetAssignedPatientID() const
 int Car::GetCarID() const
 {
 	return CID;
+}
+
+int Car::GetTimestepLeft() const
+{
+	return timestepLeft;
 }
 
 void Car::SetStaticSpeedNC(int speednc)

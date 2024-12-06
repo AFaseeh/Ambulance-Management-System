@@ -33,17 +33,14 @@ Organiser::~Organiser() {
 void Organiser::UpdateTimeStep(int time)
 {
 	for (int i = 0; i < hospitalNumber; i++) {
-		int random = rand() % 100+1;
+        int random = rand() % 100+1;
         string message;
         if (random >= 91 && random<95) {
             //move car from back to free list of its hospital
             message = "Move From Back to free ";
-            Car* car = nullptr;
-            int priority;
-			BackCars.dequeue(car,priority);
-            if (car)
+            bool done= returnCar();
+            if (done)
             {
-                hospitals[car->GetHospitalID()]->CarBack(car);
                 message = message + "\n";
             }
             else
@@ -52,12 +49,9 @@ void Organiser::UpdateTimeStep(int time)
         else if (random >= 80 && random<90) {
         //move car from out to back list
             message = "Move from Out to Back ";
-            int trashOutPut = -1;
-            Car* c = nullptr;
-            OutCars.dequeue(c, trashOutPut);
+			bool c = SwitchOutToBack();
             if (c)
             {
-                BackCars.enqueue(c, trashOutPut);
                 message = message + "\n";
             }
             else
@@ -65,7 +59,6 @@ void Organiser::UpdateTimeStep(int time)
         }
         else if (random >= 70 && random<75) {
             // take a patient from all patients and assign to car 
-            // need a function to send out a specific car in hospital or create a dummy normal patient ?
 
             message = "Moving NCar from hospital[" + std::to_string(i) + "] to out list CID: ";
             Car* free = hospitals[i]->OutCar(CAR_TYPE::NORMAL_CAR);
@@ -246,21 +239,61 @@ void Organiser::Addout_Car(Car* car)
     OutCars.enqueue(car, priority);
 }
 
-//switch car from back to out
-void Organiser::SwitchOutToBack()
+//switch car from out to back(tested and working)
+bool Organiser::SwitchOutToBack()
 {
+	bool done = false;
 	Car* car;
     int time;
+	while (OutCars.peek(car, time))
+	{
+        if (!car->GetTimestepLeft()) {
+            done = true;
     OutCars.dequeue(car, time);
-
-    // Calculate return to hospital time and push it with this priority
-    // time = ...
-	BackCars.enqueue(car, time);
+	BackCars.enqueue(car, 20);
+		}
+		else
+			break;
+    }
+    return done;
     }
 
 void Organiser::AddPatient(Patient* patient)
 {
    AllPatients.enqueue(patient);
+}
+
+//back to free (tested and working)
+bool Organiser::returnCar()
+{
+    Car* car=nullptr;
+    int trashcan=-1;
+    bool done = false;
+    while (BackCars.peek(car, trashcan) && !car->GetTimestepLeft()) {
+       
+        done = true;
+            BackCars.dequeue(car, trashcan);
+            hospitals[car->GetHospitalID()]->CarBack(car);
+          
+
+    }
+    return done;
+}
+
+//cancel request(should be working but need test)
+void Organiser::cancelRequest(int timestep)
+{
+	CancelRequest* req;
+	while (CancelledRequest.peek(req) && req->getCancelTime() == timestep)
+	{
+		CancelledRequest.dequeue(req);
+		Patient *p=hospitals[req->getHID()]->removepatient(req->getPID()); 
+        if (p)
+        {
+           Car*car= OutCars.cancelRequest(req->getPID());
+		   hospitals[car->GetHospitalID()]->CarBack(car);
+        }
+	}
 }
 
 void Organiser::PrintInfo()

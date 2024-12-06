@@ -20,8 +20,11 @@ public:
 	Hospital(Organiser* organiser, int id);
 	~Hospital();
 	void addpatient(Patient* t);
+	Patient* removepatient(int pid);
 	void Assignpatient(Patient* t);
 	void LoadCars(int sCars, int nCars);
+
+	
 	friend ostream& operator<<(ostream& os, const Hospital& h);
 	// Phase 1.2
 	void CarBack(Car* car);
