@@ -26,6 +26,7 @@ public:
 	int GetSeverity() const;
 	int GetID() const;
 	PATIENT_TYPE GetType() const;
+	void setPickUpTime(int time);
 	int GetPickUpTime() const;
 	int GetHID() const;
 	int GetRequestTime() const;

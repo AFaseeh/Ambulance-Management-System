@@ -30,8 +30,9 @@ private:
 	CAR_TYPE carType;
 	CAR_STATUS carStatus;
 	Patient* assignedPatient;
-	int totalTimestep;
-	int timestepLeft;
+	int busyTime;
+	int startedTime;
+	int arrivalTime; //time at which car arrives at hospital
 	int HID;	// 0-indexed	
 	int CID;	// 0-indexed
 	int speed;
@@ -41,18 +42,21 @@ private:
 public:
 	Car(CAR_TYPE type, int hospitalID, int cid);
 	void SetStatus(CAR_STATUS status);
-	void AssignPatient(Patient* patient);
-	void PickUpPatient();		// Car status ->Loaded
-	Patient* DropOffPatient();	// Car status ->Ready
+	void AssignPatient(Patient* patient,int CurrentTime);
+	void PickUpPatient(int currentTime);		// Car status ->Loaded
+	Patient* DropOffPatient(int current);	// Car status ->Ready
 	CAR_TYPE GetType() const;
 	CAR_STATUS GetStatus() const;
-	void settotaltime();
-	void setTimestepLeft(int);
-	int getTotaltime() const;
+	/*int getArrivalTime() const;*/
+	int setArrivalTime(int time);
+	int gettotaltime() ;
+	int cancel(int current);
+	//void SetStarted(int current);
+	//int getTimeTaken(int Current);
 	int GetHospitalID() const;
 	int GetAssignedPatientID() const;
 	int GetCarID() const;
-	int GetTimestepLeft() const;
+	//int getTimestepLeft(int ) ;
 	friend std::ostream& operator<<(std::ostream& os, const Car& c);
 	static void SetStaticSpeedNC(int staticSpeedNC);
 	static void SetStaticSpeedSC(int speedsc);

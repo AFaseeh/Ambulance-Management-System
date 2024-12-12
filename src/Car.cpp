@@ -4,7 +4,7 @@ int Car::staticSpeedNC = -1;
 int Car::staticSpeedSC = -1;
 
 Car::Car(CAR_TYPE type, int hospitalID, int cid) : carType(type), carStatus(CAR_STATUS::READY),
-														assignedPatient(nullptr), HID(hospitalID), CID(cid)
+assignedPatient(nullptr), HID(hospitalID), CID(cid), arrivalTime(0), startedTime(0),busyTime(0)
 {
 	if (type == CAR_TYPE::NORMAL_CAR)
 	{
@@ -14,7 +14,7 @@ Car::Car(CAR_TYPE type, int hospitalID, int cid) : carType(type), carStatus(CAR_
 	{
 		speed = staticSpeedSC;
 	}
-	timestepLeft = 3;
+	
 }
 
 void Car::SetStatus(CAR_STATUS status)
@@ -22,28 +22,34 @@ void Car::SetStatus(CAR_STATUS status)
 	this->carStatus = status;
 }
 
-void Car::AssignPatient(Patient* patient)
+//set patient and change start time
+void Car::AssignPatient(Patient* patient,int CurrentTime)
 {
 	if (carStatus != CAR_STATUS::READY)
 		return;
-
 	this->carStatus = CAR_STATUS::ASSIGNED;
 	this->assignedPatient = patient;
 }
 
-void Car::PickUpPatient()
+void Car::PickUpPatient(int currentTime)
 {
+	//used
 	if (assignedPatient == nullptr)
 		return;
 
 	this->carStatus = CAR_STATUS::LOADED;
+	busyTime += this->gettotaltime();
+	assignedPatient->setPickUpTime(currentTime) ;
+	startedTime = currentTime;
 }
 
-Patient* Car::DropOffPatient()
+Patient* Car::DropOffPatient(int current)
 {
+	//usedd
 	if (carStatus != CAR_STATUS::LOADED)
 		return nullptr;
 
+	busyTime += current-startedTime;	
 	Patient* patient = this->assignedPatient;
 	this->assignedPatient = nullptr;
 	this->carStatus = CAR_STATUS::READY;
@@ -61,15 +67,37 @@ CAR_STATUS Car::GetStatus() const
 	return carStatus;
 }
 
-//void Car::setTimestepLeft(int current)
-//{
-//	timestepLeft = current+this->getTotaltime();
-//}
 
-int Car::getTotaltime() const
+int Car::setArrivalTime(int time)
 {
-	return assignedPatient->getDistance() / speed;
+	//used
+	startedTime = time;
+	arrivalTime = time+this->gettotaltime();
+	return arrivalTime;
 }
+
+int Car::gettotaltime()
+{
+	//usedd
+	return assignedPatient->getDistance()/speed;
+}
+
+int Car::cancel(int current)
+{
+	//used
+	int time_taken = current - startedTime;
+	busyTime += time_taken;
+	arrivalTime = current + time_taken;
+	startedTime = current;
+	return (arrivalTime);
+}
+
+
+
+
+
+
+
 
 int Car::GetHospitalID() const
 {
@@ -88,11 +116,6 @@ int Car::GetAssignedPatientID() const
 int Car::GetCarID() const
 {
 	return CID;
-}
-
-int Car::GetTimestepLeft() const
-{
-	return timestepLeft;
 }
 
 void Car::SetStaticSpeedNC(int speednc)

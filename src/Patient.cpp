@@ -21,6 +21,11 @@ PATIENT_TYPE Patient::GetType() const
 	return Type;
 }
 
+void Patient::setPickUpTime(int time)
+{
+	PickUpTime = time;
+}
+
 int Patient::GetPickUpTime() const
 {
 	return PickUpTime;

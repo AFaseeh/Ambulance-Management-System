@@ -24,15 +24,18 @@ public:
 
 	void UpdateTimeStep(int time);		// Gets called Every timestep
 	void LoadFile();					// Loads file at program startup
-	void Addout_Car(Car* car);			//											**
-	bool SwitchOutToBack();				// Puts front of "Outcars" into "Backcars"	**
+	void Addout_Car(Car* car,int CurrentStep);			//											**
+	void SwitchOutToBack(int time);				// Puts front of "Outcars" into "Backcars"	**
 	void AddPatient(Patient* patient);	// add patient to allPatients queue			**
-	bool returnCar();			//											**
+	void returnCar(int CurrentStep);			//											**
 	void cancelRequest(int timestep);	//											**
+	
 	// Collect statistics that are needed to create output file
 	void PrintInfo();
 
 	//Phase 1.2
 	void SimulatorFunc();
 	void SendPatientsToHospital(int time);
+
+	
 };

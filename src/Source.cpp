@@ -50,12 +50,12 @@ void Test_OutCarsPriQueue()
 	Patient* p5 = new Patient(PATIENT_TYPE::NP, 5, 1, 1, 1);
 	Patient* p6 = new Patient(PATIENT_TYPE::NP, 6, 1, 1, 1);
 
-	c1->AssignPatient(p1);
+	/*c1->AssignPatient(p1);
 	c2->AssignPatient(p2);
 	c3->AssignPatient(p3);
 	c4->AssignPatient(p4);
 	c5->AssignPatient(p5);
-	c6->AssignPatient(p6);
+	c6->AssignPatient(p6);*/\
 
 	OutCarsPriQueue q;
 	q.enqueue(c1, 0);
@@ -81,10 +81,12 @@ void Test_OutCarsPriQueue()
 
 }
 
+
 int main()
 {
 	Organiser *o;
-	o = new Organiser();	
+	o = new Organiser();
+	
 	o->SimulatorFunc();
 	return 0;
 }
