@@ -414,18 +414,6 @@ void Organiser::generateoutputfile() {
 
 		AllPatients.enqueue(p1);
 	}
-	myfile << "patients:" << AllPatients.getCount()<<"   "<<"[NP: "<<npc<<", "<<"SP: "<<spc<<", "<< "EP: " <<epc<<" ]"<<'\n';
-	myfile << "hospitals:" << hospitalNumber<<'\n';
-	myfile << "Avg wait Time:" << sumwaitTime/AllPatients.getCount()<< '\n';
-	myfile << "\n";
-	myfile << "\n";
-
-
-	
-
-
-
-
 
 
 	myfile.close();
