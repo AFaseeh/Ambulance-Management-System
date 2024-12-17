@@ -3,6 +3,11 @@
 #include "../ADTs/OutCarsPriQueue.h"
 #include "../headers/UI.h"
 #include "Hospital.h"
+
+#include "../headers/"
+
+
+
 #include "CancelRequest.h"
 
 class Organiser {
@@ -28,6 +33,7 @@ public:
 	void SwitchOutToBack(int time);				// Puts front of "Outcars" into "Backcars"	**
 	void AddPatient(Patient* patient);	// add patient to allPatients queue			**
 	void returnCar(int CurrentStep);			//											**
+	void generateoutputfile();
 	void cancelRequest(int timestep);	//											**
 	
 	// Collect statistics that are needed to create output file
@@ -36,6 +42,10 @@ public:
 	//Phase 1.2
 	void SimulatorFunc();
 	void SendPatientsToHospital(int time);
+	void TestGenerateOutputFile();
+
 
 	
 };
+
+
