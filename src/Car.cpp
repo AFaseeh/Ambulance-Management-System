@@ -128,7 +128,8 @@ void Car::SetStaticSpeedSC(int speedsc)
 	staticSpeedSC = speedsc;
 }
 
-int Car::GetSpeed() const
+int Car::
+GetSpeed() const
 {
 	return speed;
 }

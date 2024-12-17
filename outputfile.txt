@@ -1,0 +1,8 @@
+FT   PID    QT     WT    STATUS
+2   101    2    0    SERVED
+2   102    2    0    CANCELED
+patients:2   [NP: 1, SP: 1, EP: 0 ]
+hospitals:4
+Avg wait Time:0
+
+
