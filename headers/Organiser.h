@@ -4,7 +4,7 @@
 #include "../headers/UI.h"
 #include "Hospital.h"
 
-#include "../headers/"
+#include "../records.h"
 
 
 
@@ -26,6 +26,7 @@ private:
 public:
 	Organiser();
 	~Organiser();
+	void sortrecords(record** r,int coount);
 
 	void UpdateTimeStep(int time);		// Gets called Every timestep
 	void LoadFile();					// Loads file at program startup

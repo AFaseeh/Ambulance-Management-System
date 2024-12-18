@@ -6,6 +6,7 @@ int Car::staticSpeedSC = -1;
 Car::Car(CAR_TYPE type, int hospitalID, int cid) : carType(type), carStatus(CAR_STATUS::READY),
 assignedPatient(nullptr), HID(hospitalID), CID(cid), arrivalTime(0), startedTime(0),busyTime(0)
 {
+	totalBusyTime = 0;
 	if (type == CAR_TYPE::NORMAL_CAR)
 	{
 		speed = staticSpeedNC;
@@ -92,6 +93,13 @@ int Car::cancel(int current)
 	return (arrivalTime);
 }
 
+void addBusyTime(int pickupTime, int finishTime) {
+	totalBusyTime += (finishTime - pickupTime);
+}
+
+
+	return totalBusyTime;
+}
 
 
 

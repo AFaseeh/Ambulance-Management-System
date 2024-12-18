@@ -86,8 +86,9 @@ int main()
 {
 	Organiser *o;
 	o = new Organiser();
-	o->LoadFile();
+	//o->LoadFile();
+	o->PrintInfo();
 	//o->SimulatorFunc();
-	o->TestGenerateOutputFile();
+	//o->TestGenerateOutputFile();
 	return 0;
 }
