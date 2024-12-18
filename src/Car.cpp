@@ -1,4 +1,4 @@
-#include "../headers/Car.h"
+﻿#include "../headers/Car.h"
 
 int Car::staticSpeedNC = -1;
 int Car::staticSpeedSC = -1;
@@ -26,6 +26,7 @@ void Car::SetStatus(CAR_STATUS status)
 //set patient and change start time
 void Car::AssignPatient(Patient* patient,int CurrentTime)
 {
+	startedTime = CurrentTime;
 	if (carStatus != CAR_STATUS::READY)
 		return;
 	this->carStatus = CAR_STATUS::ASSIGNED;
@@ -34,7 +35,6 @@ void Car::AssignPatient(Patient* patient,int CurrentTime)
 
 void Car::PickUpPatient(int currentTime)
 {
-	//used
 	if (assignedPatient == nullptr)
 		return;
 
@@ -43,20 +43,19 @@ void Car::PickUpPatient(int currentTime)
 	assignedPatient->setPickUpTime(currentTime) ;
 	startedTime = currentTime;
 }
-
 Patient* Car::DropOffPatient(int current)
 {
-	//usedd
 	if (carStatus != CAR_STATUS::LOADED)
 		return nullptr;
 
-	busyTime += current-startedTime;	
+	busyTime += current - startedTime;
 	Patient* patient = this->assignedPatient;
 	this->assignedPatient = nullptr;
 	this->carStatus = CAR_STATUS::READY;
 
 	return patient;
 }
+
 
 CAR_TYPE Car::GetType() const
 {
@@ -93,20 +92,13 @@ int Car::cancel(int current)
 	return (arrivalTime);
 }
 
-void addBusyTime(int pickupTime, int finishTime) {
+void Car::addBusyTime(int pickupTime, int finishTime) {
 	totalBusyTime += (finishTime - pickupTime);
 }
 
-
+int Car::getTotalBusyTime()  {
 	return totalBusyTime;
 }
-
-
-
-
-
-
-
 int Car::GetHospitalID() const
 {
 	return HID;

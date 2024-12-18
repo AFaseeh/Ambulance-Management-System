@@ -5,6 +5,7 @@
 #include <conio.h>
 using namespace std;
 
+
 string UI::Loadfile()
 {
 	cout << "Enter File Name (enter \"-1\" for default file): ";
@@ -31,12 +32,14 @@ void UI::PrintTimeStep(Organiser* org, int time, Hospital* hospital, string mess
 	cout << message;
 	cout << *hospital;
 
+
 	org->PrintInfo();
 	cout << "Enter any value to continue" << endl;
 
 	char ch = _getch();
 
 }
+
 
 void UI::PrintMessage(string message)
 {

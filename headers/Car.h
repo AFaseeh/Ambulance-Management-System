@@ -28,6 +28,8 @@ class Car
 
 private:
 	CAR_TYPE carType;
+		int totalBusyTime;
+
 	CAR_STATUS carStatus;
 	Patient* assignedPatient;
 	int busyTime;
@@ -37,8 +39,8 @@ private:
 	int CID;	// 0-indexed
 	int speed;
 	static int staticSpeedNC;
+
 	static int staticSpeedSC;
-	int totalBusyTime;
 
 public:
 	Car(CAR_TYPE type, int hospitalID, int cid);
@@ -58,7 +60,7 @@ public:
 	int GetAssignedPatientID() const;
 	int GetCarID() const;
 	void addBusyTime(int pickupTime, int finishTime);
-	int getTotalBusyTime() const;
+	int getTotalBusyTime() ;
 	//int getTimestepLeft(int ) ;
 	friend std::ostream& operator<<(std::ostream& os, const Car& c);
 	static void SetStaticSpeedNC(int staticSpeedNC);

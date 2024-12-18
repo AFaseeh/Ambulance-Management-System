@@ -1,10 +1,16 @@
 #include "../headers/Organiser.h"
+#include "../ADTs/ArrayStack.h"
+
 //#include "../headers/Hospital.h"
 //#include "../headers/Patient.h"
 //#include "../headers/Car.h"
+
 #include "../headers/CancelRequest.h"
 #include <iostream>
+using namespace std;
 #include <string>
+#include <iomanip>
+
 using namespace std;
 
 Organiser::Organiser()
@@ -12,7 +18,16 @@ Organiser::Organiser()
 {
 	ui = new UI;
 }
-
+void Organiser::returnCar(int CurrentStep)
+{
+	Car* car = nullptr;
+	int arrTime = -1;
+	while (BackCars.peek(car, arrTime) && arrTime == CurrentStep) {
+		BackCars.dequeue(car, arrTime);
+		hospitals[car->GetHospitalID()]->CarBack(car);
+		FinishedRequest.enqueue(car->DropOffPatient(CurrentStep));
+	}
+}
 Organiser::~Organiser() {
 	for (int i = 0; i < hospitalNumber; ++i) {
 		delete hospitals[i];
@@ -29,126 +44,156 @@ Organiser::~Organiser() {
 			delete p;
 	}
 }
+void Organiser::SimulatorFunc()
+{
+	int mode;
+	int count = 0;
 
+	cout << "Please select mode of operation: 0 for Interactive Mode, 1 for Silent Mode: ";
+	cin >> mode;
 
-void Organiser::UpdateTimeStep(int time)
+	LoadFile();
+
+	if (mode == 0) {
+		cout << "Interactive Mode, Simulation Starts..." << endl;
+		while (FinishedRequest.getCount() != numOfRequests && ++count)
+		{
+			cout << "Current Timestep: " << count << endl;
+			SendPatientsToHospital(count);
+
+			UpdateTimeStep(count,mode);
+
+			cout << "Press any key to continue to the next timestep..." << endl;
+			cin.ignore();
+			cin.get();
+		}
+
+		GenerateOutputFile(count);
+		cout << "Simulation ends, Output file created." << endl;
+	}
+	else if (mode == 1)
+	{
+		cout << "Silent Mode, Simulation Starts..." << endl;
+
+		while (FinishedRequest.getCount() != numOfRequests && ++count)
+		{
+			SendPatientsToHospital(count);
+
+			UpdateTimeStep(count,mode);
+		}
+
+		GenerateOutputFile(count);
+		cout << "Simulation ends, Output file created." << endl;
+	}
+	else
+	{
+		cout << "Invalid mode selected. Please restart the program." << endl;
+	}
+}
+
+void Organiser::UpdateTimeStep(int time, int mode)
 {
 	for (int i = 0; i < hospitalNumber; i++) {
 		int random = rand() % 100 + 1;
 		string message;
 		bool done = true;
+
 		if (random >= 91 && random < 95) {
-			//move car from back to free list of its hospital
 			message = "Move From Back to free ";
 			returnCar(time);
-			if (done)
-			{
+			if (done) {
 				message = message + "\n";
 			}
-			else
+			else {
 				message = message + "(No available car)\n";
+			}
 		}
 		else if (random >= 80 && random < 90) {
-			//move car from out to back list
 			message = "Move from Out to Back ";
 			SwitchOutToBack(time);
-			if (done)
-			{
+			if (done) {
 				message = message + "\n";
 			}
-			else
+			else {
 				message = message + "(No available car)\n";
+			}
 		}
 		else if (random >= 70 && random < 75) {
-			// take a patient from all patients and assign to car 
-
 			message = "Moving NCar from hospital[" + std::to_string(i) + "] to out list CID: ";
 			Car* free = hospitals[i]->OutCar(CAR_TYPE::NORMAL_CAR);
-			if (free)
-			{
+			if (free) {
 				message = message + std::to_string(free->GetCarID()) + "\n";
 				OutCars.enqueue(free, 0);
 			}
-			else
-			{
+			else {
 				message = message + "No available car\n";
 			}
 		}
 		else if (random >= 40 && random < 45) {
-			//same as above but for special car
 			message = "Moving SCar from hospital[" + std::to_string(i) + "] to out list CID: ";
 			Car* free = hospitals[i]->OutCar(CAR_TYPE::SPECIAL_CAR);
-			if (free)
-			{
+			if (free) {
 				message = message + std::to_string(free->GetCarID()) + "\n";
 				OutCars.enqueue(free, 0);
 			}
-			else
-			{
+			else {
 				message = message + "No available car\n";
 			}
 		}
 		else if (random >= 30 && random < 40) {
-			//move NP patient to finished
 			message = "Moving NP from hospital[" + std::to_string(i) + "] to finish list PID: ";
 			Patient* free = hospitals[i]->FinishNP();
-			if (free)
-			{
+			if (free) {
 				message = message + std::to_string(free->GetID()) + "\n";
 				FinishedRequest.enqueue(free);
 			}
-			else
-			{
+			else {
 				message = message + "No available Patient\n";
 			}
 		}
-		else if (random >= 20 && random < 25)
-		{
-			//move EP patient to finished
+		else if (random >= 20 && random < 25) {
 			message = "Moving EP from hospital[" + std::to_string(i) + "] to finish list PID: ";
 			Patient* free = hospitals[i]->FinishEP();
-			if (free)
-			{
+			if (free) {
 				message = message + std::to_string(free->GetID()) + "\n";
 				FinishedRequest.enqueue(free);
 			}
-			else
-			{
+			else {
 				message = message + "No available Patient\n";
 			}
 		}
 		else if (random >= 10 && random < 20) {
-			//move SP patient to finished
 			message = "Moving SP from hospital[" + std::to_string(i) + "] to finish list PID: ";
 			Patient* free = hospitals[i]->FinishSP();
-			if (free)
-			{
+			if (free) {
 				message = message + std::to_string(free->GetID()) + "\n";
 				FinishedRequest.enqueue(free);
 			}
-			else
-			{
+			else {
 				message = message + "No available Patient\n";
 			}
 		}
-
-		ui->PrintTimeStep(this, time, hospitals[i], message);
-
-
-		if (FinishedRequest.getCount() == numOfRequests)
-		{
+		if (mode == 0) {
+			ui->PrintTimeStep(this, time, hospitals[i], message);
+			if (FinishedRequest.getCount() > 0) {
+				message = "Finished Requests: " + std::to_string(FinishedRequest.getCount()) + "\n";
+				ui->PrintMessage(message);
+			}
+		}
+		if (FinishedRequest.getCount() == numOfRequests) {
 			ui->PrintMessage("Finished Simulation");
 			return;
 		}
 	}
-}
 
+
+}
 
 void Organiser::LoadFile()
 {
 	string fname = ui->Loadfile();
 
-	cout << fname << endl;
+	std::cout << fname << endl;
 
 	ifstream fin(fname);
 	if (fin.is_open() == false)
@@ -233,7 +278,6 @@ void Organiser::LoadFile()
 		CancelledRequest.enqueue(req);
 	}
 }
-
 //add car to out list 
 void Organiser::Addout_Car(Car* car, int CurrentStep)
 {
@@ -260,234 +304,23 @@ void Organiser::AddPatient(Patient* patient)
 	AllPatients.enqueue(patient);
 }
  
-//back to free updated
-void Organiser::returnCar(int CurrentStep)
-{
-	Car* car = nullptr;
-	int arrTime = -1;
-	while (BackCars.peek(car, arrTime) && arrTime == CurrentStep) {
-		BackCars.dequeue(car, arrTime);
-		hospitals[car->GetHospitalID()]->CarBack(car);
-		FinishedRequest.enqueue(car->DropOffPatient(CurrentStep));
-	}
-}
-void Organiser::TestGenerateOutputFile() {
-	// Clear existing data
-	while (!AllPatients.isEmpty()) {
-		Patient* temp;
-		AllPatients.dequeue(temp);
-		delete temp;
-	}
-	while (!OutCars.isEmpty()) {
-		Car* temp;
-		int x;
-		OutCars.dequeue(temp, x);
-		delete temp;
-	}
-	while (!CancelledRequest.isEmpty()) {
-		CancelRequest* temp;
-		CancelledRequest.dequeue(temp);
-		delete temp;
-	}
-	Patient* p1 = new Patient(PATIENT_TYPE::NP, 101, 1, 1, 1);
-	Patient* p2 = new Patient(PATIENT_TYPE::SP, 102, 1, 2, 3);
-	AllPatients.enqueue(p1); 
-	AllPatients.enqueue(p2); // ID=102, Distance=20, PickupTime=3
-
-	// Populate OutCars queue
-	Car* car1 = new Car(CAR_TYPE::NORMAL_CAR, 2,1); // Speed=2
-	Car* car2 = new Car(CAR_TYPE::NORMAL_CAR, 3,1); 
-
-	car1->AssignPatient(p1, 3);
-	car1->PickUpPatient(4); 
-	car2->AssignPatient(p2, 4);
-	car2->PickUpPatient(6);
-	OutCars.enqueue(car1, 0);
 
 
-	OutCars.enqueue(car2, 1);
-
-	// Populate CancelledRequest queue
-	CancelledRequest.enqueue(new CancelRequest(102, 10, 1)); // Patient 102 canceled
-
-	// Call generateoutputfile()
-	generateoutputfile();
-}
-void Organiser::generateoutputfile() {
-	int epc = 0;
-	int npc = 0;
-	int sumwaitTime = 0;
-	int rcount = 0;  // Keep track of the actual record count
-	int spc = 0;
-	Car* c1 = nullptr;
-	int countcars=0;
-	int busytime=0;
 
 
-	// Open output file
-	ofstream myfile("outputfile.txt");
-	if (!myfile.is_open()) {
-		cerr << "Error: Could not open output file!" << endl;
-		return;
-	}
-	cout << "Output file written successfully." << endl;
-
-	// Write header to the file
-	myfile << "FT   PID    QT     WT    STATUS\n";
-
-	NPatientQueue tempPatients;
-	OutCarsPriQueue tempCars;
-
-	Patient* p1 = nullptr;
-	record* arr[100];  
-	int recordCount = 0; 
-
-	while (AllPatients.dequeue(p1)) {
-		Car* assignedCar = nullptr;
-		int travelTime = 0;
-		int finishTime = 0;
-		int waitTime = 0;
-
-		string status = "SERVED";
-
-		// Count patients based on type
-		switch (p1->GetType()) {
-		case NP:
-			npc++;
-			break;
-		case SP:
-			spc++;
-			break;
-		case EP:
-			epc++;
-			break;
-		}
-
-		// Find the assigned car
-		int x;
-		while (OutCars.dequeue(c1, x)) {
-			tempCars.enqueue(c1, x);  
-			if (c1 && c1->GetAssignedPatientID() == p1->GetID()) {
-				busytime = 
-				
-				assignedCar = c1;
-				break;
-			}
-		}
-
-		if (assignedCar != nullptr) {
-			travelTime = static_cast<int>(p1->getDistance()) / assignedCar->GetSpeed();
-			finishTime = p1->GetPickUpTime() + travelTime;
-			waitTime = p1->GetPickUpTime() - p1->GetRequestTime();
-			sumwaitTime += waitTime;
-
-			arr[recordCount] = new record(finishTime, p1->GetID(), p1->GetRequestTime(), waitTime, status);
-			recordCount++;
-		}
-		else {
-			status = "NO CAR";  // No record if no car was assigned
-		}
-
-		// Restore cars back to the queue
-		while (!tempCars.isEmpty()) {
-			tempCars.dequeue(c1, x);
-			OutCars.enqueue(c1, x);
-		}
-
-		// Check for cancel requests
-		CancelRequest* cancelReq = nullptr;
-		CancelledRequest.dequeue(cancelReq);
-		if (cancelReq != nullptr && cancelReq->getPID() == p1->GetID()) {
-			status = "CANCELED";
-		}
-		else if (cancelReq != nullptr) {
-			CancelledRequest.enqueue(cancelReq);
-		}
-
-		tempPatients.enqueue(p1);
-	}
-
-	sortrecords(arr, recordCount);
-
-	// Write the sorted records to the output file
-	for (int i = 0; i < recordCount; i++) {
-		if (arr[i] != nullptr) {  
-			myfile << arr[i]->getFT() << "   "
-				<< arr[i]->getPID() << "    "
-				<< arr[i]->getQT() << "    "
-				<< arr[i]->getWT() << "    "
-				<< arr[i]->getStatus() << "\n";
-		}
-	}
-
-	// Restore patients back to the original queue
-	while (!tempPatients.isEmpty()) {
-		tempPatients.dequeue(p1);
-		AllPatients.enqueue(p1);
-	}
-
-	myfile << "patients:" << AllPatients.getCount() << "   "
-		<< "[NP: " << npc << ", " << "SP: " << spc << ", " << "EP: " << epc << "]\n";
-	myfile << "hospitals:" << hospitalNumber << '\n';
-	myfile << "Avg wait Time:" << (sumwaitTime / AllPatients.getCount()) << '\n';
-	myfile << "\n\n";
-	
-	myfile.close();
-	cout << "File generation completed." << endl;
-
-}
-
-void Organiser::sortrecords(record** arr, int count) {
-	for (int i = 0; i < count - 1; i++) {
-		for (int j = 0; j < count - 1 - i; j++) {
-			if (arr[j]->getFT() > arr[j + 1]->getFT()) {
-				record* temp = arr[j];
-				arr[j] = arr[j + 1];
-				arr[j + 1] = temp;
-			}
-		}
-	}
-}
 
 
-//cancel request updated
-void Organiser::cancelRequest(int timestep)
-{
-	CancelRequest* req;
-	while (CancelledRequest.peek(req) && req->getCancelTime() == timestep)
-	{
-		CancelledRequest.dequeue(req);
-		
-		Patient* p = hospitals[req->getHID()]->removepatient(req->getPID());
-		if (!p)
-		{
-			Car* car = OutCars.cancelRequest(req->getPID());
-			BackCars.enqueue(car, car->cancel(timestep));
-		}
-		
-	}
-}
+
 
 void Organiser::PrintInfo()
 {
-	cout << "----------------------------------------" << endl;
-	cout << OutCars.getCount() << " ==> Out cars: "; OutCars.printList(); cout << endl;
-	cout << BackCars.getCount() << " ==> Back cars: "; BackCars.printList(); cout << endl;
-	cout << "----------------------------------------" << endl;
-	cout << FinishedRequest.getCount() << " finished patients: "; FinishedRequest.printList(); cout << endl;
+	std::cout << "----------------------------------------" << endl;
+	std::cout << OutCars.getCount() << " ==> Out cars: "; OutCars.printList(); cout << endl;
+	std::cout << BackCars.getCount() << " ==> Back cars: "; BackCars.printList(); cout << endl;
+	std::cout << "----------------------------------------" << endl;
+	std::cout << FinishedRequest.getCount() << " finished patients: "; FinishedRequest.printList(); cout << endl;
 }
 
-void Organiser::SimulatorFunc()
-{
-	LoadFile();
-
-	int count = 0;
-	while (FinishedRequest.getCount() != numOfRequests && ++count)
-	{
-		SendPatientsToHospital(count);
-		UpdateTimeStep(count);
-	}
-}
 
 void Organiser::SendPatientsToHospital(int time)
 {
@@ -504,3 +337,128 @@ void Organiser::SendPatientsToHospital(int time)
 }
 
 
+
+
+
+void Organiser::GenerateOutputFile(int timestep) {
+
+	std::ofstream myfile("output.txt");
+	if (!myfile.is_open()) {
+		std::cout << "Unable to open file for output!" << std::endl;
+		return;
+	}
+
+	myfile << "FT   PID    QT     WT    STATUS\n";
+	int npc = 0, spc = 0, epc = 0;
+	int ncc = 0, scc = 0;
+
+	int totalWaitTime = 0, totalBusyTime = 0;
+	int countcars = 0;
+	int totalbusytime = 0;
+	std::string status;
+	while (!FinishedRequest.isEmpty()) {
+
+		Patient* p1;
+		FinishedRequest.dequeue(p1);
+		int waitTime = p1->GetPickUpTime() - p1->GetRequestTime();
+		if (p1->GetType() == PATIENT_TYPE::NP) npc++;
+		if (p1->GetType() == PATIENT_TYPE::SP) spc++;
+
+		if (p1->GetType() == PATIENT_TYPE::EP) epc++;
+		totalWaitTime += waitTime;
+		if (p1->GetPickUpTime() != -1) {
+			status = "PICKED";
+			myfile << std::setw(8) << p1->GetPickUpTime()
+				<< std::setw(8) << p1->GetID()
+				<< std::setw(8) << p1->GetRequestTime()
+				<< std::setw(8) << waitTime
+				<< std::setw(12) << status << "\n";
+		}
+		else {
+			status = "NO CAR";
+			myfile << std::left << std::setw(8) << "N/A"
+				<< std::setw(8) << p1->GetID()
+				<< std::setw(8) << p1->GetRequestTime()
+				<< std::setw(8) << "N/A"
+				<< std::setw(12) << status << "\n";
+		}
+
+	}
+	Car* c1 = nullptr;
+	int t;
+	LinkedQueue<Car*> car1;
+	LinkedQueue<Car*> car2;
+
+	for (int i = 0; i < hospitalNumber; i++) {
+		car1 = hospitals[i]->GetFreeNormalCars();
+		car2 = hospitals[i]->GetFreeSpecialCars();
+		while (car1.dequeue(c1)) {
+			countcars++;
+			if (c1->GetType() == CAR_TYPE::NORMAL_CAR) {
+				ncc++;
+			}
+			else {
+				scc++;
+
+			}
+			totalbusytime += c1->getTotalBusyTime();
+
+
+		}
+		while (car2.dequeue(c1)) {
+			countcars++;
+			if (c1->GetType() == CAR_TYPE::NORMAL_CAR) {
+				ncc++;
+			}
+			else {
+				scc++;
+
+			}
+			totalbusytime += c1->getTotalBusyTime();
+
+
+		}
+
+
+	}
+	while (OutCars.dequeue(c1, t)) {
+		countcars++;
+
+		if (c1->GetType() == CAR_TYPE::NORMAL_CAR) {
+			ncc++;
+		}
+		else {
+			scc++;
+
+		}
+		totalbusytime += c1->getTotalBusyTime();
+
+	}
+	while (BackCars.dequeue(c1, t)) {
+		countcars++;
+		if (c1->GetType() == CAR_TYPE::NORMAL_CAR) {
+			ncc++;
+		}
+		else {
+			scc++;
+
+		}
+
+		totalbusytime += c1->getTotalBusyTime();
+
+	}
+
+	int totalPatients = npc + spc + epc;
+	myfile << "patients: " << totalPatients << "   "
+		<< "[NP: " << npc << ", SP: " << spc << ", EP: " << epc << "]\n";
+	myfile << "hospitals: " << hospitalNumber - 1 << '\n';
+	myfile << "Cars: " << countcars << "   "
+		<< "[Scar: " << scc << ", NCar: " << ncc  << "]\n";
+	myfile << "Avg wait Time: " << (totalPatients > 0 ? totalWaitTime / totalPatients : 0) << '\n';
+	myfile << "Avg busy time: " << (countcars > 0 ? totalbusytime / countcars : 0) << '\n';
+	myfile << "Avg utilization time: " << (totalbusytime > 0 ? (totalbusytime / timestep) * 100 : 0) << "%" << '\n';
+
+	myfile.close();
+	std::cout << "File generation completed." << std::endl;
+
+}
