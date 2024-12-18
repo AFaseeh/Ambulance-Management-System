@@ -129,6 +129,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ADTs\NPatientQueue.cpp" />
+    <ClCompile Include="records.cpp" />
     <ClCompile Include="src\CancelRequest.cpp" />
     <ClCompile Include="src\Car.cpp" />
     <ClCompile Include="src\Hospital.cpp" />
@@ -153,6 +154,7 @@
     <ClInclude Include="headers\Organiser.h" />
     <ClInclude Include="headers\Patient.h" />
     <ClInclude Include="headers\UI.h" />
+    <ClInclude Include="records.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
