@@ -6,6 +6,7 @@
 
 class Hospital;
 
+
 class Organiser {
 private:
 	int** distanceMatrix;
@@ -24,12 +25,15 @@ public:
 	~Organiser();
 
 	void UpdateTimeStep(int time, int mode);		// Gets called Every timestep
+
 	void LoadFile();					// Loads file at program startup
 	void Addout_Car(Car* car,int CurrentStep);			//											**
 	void SwitchOutToBack(int time);				// Puts front of "Outcars" into "Backcars"	**
 	void AddPatient(Patient* patient);	// add patient to allPatients queue			**
 	void returnCar(int CurrentStep);			//											**
+
 	//void cancelRequest(int timestep);	//											**
+
 	void FinishPatient(Patient* p);
 	// Collect statistics that are needed to create output file
 	void PrintInfo();
@@ -41,6 +45,7 @@ public:
 	//Phase 2
 	int FailOutCar(int currentTimeStep);
 	void ReturnCarsFromCheckUp(int currentTimeStep);
-
+  
 	void GenerateOutputFile(int timestep);
+
 };
