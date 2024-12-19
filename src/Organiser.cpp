@@ -10,6 +10,7 @@
 using namespace std;
 #include <string>
 #include <iomanip>
+#include <limits>
 
 using namespace std;
 
@@ -306,12 +307,6 @@ void Organiser::AddPatient(Patient* patient)
  
 
 
-
-
-
-
-
-
 void Organiser::PrintInfo()
 {
 	std::cout << "----------------------------------------" << endl;
@@ -337,6 +332,22 @@ void Organiser::SendPatientsToHospital(int time)
 }
 
 
+//send paitent to the nearest hospital
+void Organiser::Sendpatient(Patient* p, int distance)
+{
+	//int newHID;
+	int min = std::numeric_limits<int>::max();
+	for (int i = 0; i < hospitalNumber; i++)
+	{
+		if (distanceMatrix[p->GetHID()][i] < min && distanceMatrix[p->GetHID()][i] != 0)
+		{
+			min = distanceMatrix[p->GetHID()][i];
+			p->SetHID(i);
+		}
+	}
+	p->SetDistance(min + distance);
+	hospitals[p->GetHID()]->addpatient(p);
+};
 
 
 

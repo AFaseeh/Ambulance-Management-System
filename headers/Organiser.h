@@ -4,7 +4,7 @@
 #include "../headers/UI.h"
 #include "Hospital.h"
 
-#include "../records.h"
+//#include "../records.h"
 
 #include "../ADTs/ArrayStack.h"
 
@@ -35,7 +35,7 @@ private:
 public:
     Organiser();
     ~Organiser();
-    void sortrecords(LinkedQueue<record*>& r);
+    //void sortrecords(LinkedQueue<record*>& r);
 
     void UpdateTimeStep(int time,int mode);		// Gets called Every timestep
     void LoadFile();					// Loads file at program startup
@@ -54,6 +54,10 @@ public:
     void TestGenerateOutputFile(int timestep);
 
     void SendPatientsToHospital(int time);
+
+    //phase2
+
+    void Sendpatient(Patient* p, int distance);
    
 
 };

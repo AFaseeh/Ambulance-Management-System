@@ -37,4 +37,9 @@ public:
 	Patient* FinishEP();
 	Patient* FinishNP();
 
+	//assigning paitents
+	void AssignNP();
+	void AssignSP();
+	void AssignEP();
+
 };

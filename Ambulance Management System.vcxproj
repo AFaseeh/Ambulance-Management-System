@@ -129,6 +129,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ADTs\NPatientQueue.cpp" />
+    <ClCompile Include="jkjk.cpp" />
     <ClCompile Include="src\CancelRequest.cpp" />
     <ClCompile Include="src\Car.cpp" />
     <ClCompile Include="src\Hospital.cpp" />
