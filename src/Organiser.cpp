@@ -1,15 +1,11 @@
 #include "../headers/Organiser.h"
 #include "../ADTs/ArrayStack.h"
-
-//#include "../headers/Hospital.h"
-//#include "../headers/Patient.h"
-//#include "../headers/Car.h"
-
 #include "../headers/CancelRequest.h"
+#include "../headers/Hospital.h"
 #include <iostream>
-using namespace std;
 #include <string>
 #include <iomanip>
+#include <fstream>
 
 using namespace std;
 
@@ -17,16 +13,6 @@ Organiser::Organiser()
 	: numOfRequests(-1), hospitals(nullptr), hospitalNumber(-1), distanceMatrix(nullptr)
 {
 	ui = new UI;
-}
-void Organiser::returnCar(int CurrentStep)
-{
-	Car* car = nullptr;
-	int arrTime = -1;
-	while (BackCars.peek(car, arrTime) && arrTime == CurrentStep) {
-		BackCars.dequeue(car, arrTime);
-		hospitals[car->GetHospitalID()]->CarBack(car);
-		FinishedRequest.enqueue(car->DropOffPatient(CurrentStep));
-	}
 }
 Organiser::~Organiser() {
 	for (int i = 0; i < hospitalNumber; ++i) {
@@ -328,13 +314,6 @@ void Organiser::returnCar(int CurrentStep)
 	}
 }
 
-
-
-
-
-
-
-
 void Organiser::FinishPatient(Patient* p)
 {
 	if (p)
@@ -351,7 +330,6 @@ void Organiser::PrintInfo()
 	std::cout << "----------------------------------------" << endl;
 	std::cout << FinishedRequest.getCount() << " finished patients: "; FinishedRequest.printList(); cout << endl;
 }
-
 
 void Organiser::SendPatientsToHospital(int time)
 {
@@ -398,6 +376,26 @@ void Organiser::ReturnCarsFromCheckUp(int time)
 }
 
 
+	Car* x = OutCars.cancelRequest(c->GetAssignedPatientID());
+
+	if (c != x)
+	{
+		return -1;
+	}
+
+	c->SetStatus(CAR_STATUS::OUT_FAILED);
+	c->setArrivalTime(currentTimeStep, c->getTimeTaken(currentTimeStep));
+	BackCars.enqueue(c, -c->getArrivalTime());
+	return 0;
+}
+
+void Organiser::ReturnCarsFromCheckUp(int time)
+{
+	for (int i = 0; i < hospitalNumber; i++)
+	{
+		hospitals[i]->CompleteCarsCheckUp(time);
+	}
+}
 
 void Organiser::GenerateOutputFile(int timestep) {
 
