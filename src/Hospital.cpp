@@ -132,6 +132,54 @@ void Hospital::CarBack(Car* car)
     }
 }
 
+void Hospital::FailedCarBack(Car* car, int timeStep)
+{
+    if (car == nullptr)
+        return;
+
+    if (car->GetStatus() == CAR_STATUS::OUT_FAILED)
+    {
+        CheckUpList.AddCarToCheckUp(car, timeStep);
+        Patient* p = car->ReturnPatientToHospital();
+        ReassignPatientToHospital(p);
+        
+        return;
+    }
+}
+
+void Hospital::CompleteCarsCheckUp(int timestep)
+{
+    Car* c = nullptr;
+    do
+    {
+        c = CheckUpList.ReturnCarFromCheckUp(timestep);
+        if (c != nullptr)
+            CarBack(c);
+    } while (c != nullptr);
+}
+
+void Hospital::ReassignPatientToHospital(Patient* p)
+{
+    if (p == nullptr)
+        return;
+
+    switch (p->GetType())
+    {
+    case PATIENT_TYPE::EP:
+        epQueue.InsertAtBeginning(p);
+        break;
+    case PATIENT_TYPE::NP:
+        npQueue.InsertAtBeginning(p);
+        break;
+    case PATIENT_TYPE::SP:
+        spQueue.InsertAtBeginning(p);
+        break;
+    default:
+        cerr << "ReassignPatientToHospital type mismatch\n";
+        break;
+    }
+}
+
 Car* Hospital::OutCar(CAR_TYPE type)
 {
     Car* toreturn = nullptr;
