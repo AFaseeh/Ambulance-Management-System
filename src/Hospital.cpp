@@ -45,19 +45,10 @@ Patient* Hospital::removepatient(int pid)
    return npQueue.cancelRequest(pid);
 }
 
-void Hospital::Assignpatient(Patient * t) {   //ay 7aga for now
-    switch (t->GetType()) {
-    case EP:
+void Hospital::Assignpatient() {   //ay 7aga for now idk el switch case
         AssignEP();
-        break;
-    case SP:
         AssignSP();
-        break;
-    case NP:
         AssignNP();
-        break;
-    }
-
 }
 
 void Hospital::LoadCars(int sCars, int nCars)

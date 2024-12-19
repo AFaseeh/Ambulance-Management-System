@@ -42,7 +42,7 @@
     <ClCompile Include="src\CancelRequest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="jkjk.cpp">
+    <ClCompile Include="old code.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

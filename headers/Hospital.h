@@ -21,7 +21,7 @@ public:
 	~Hospital();
 	void addpatient(Patient* t);
 	Patient* removepatient(int pid);
-	void Assignpatient(Patient* t);
+	void Assignpatient();
 	void LoadCars(int sCars, int nCars);
 	// Getter for freeSpecialCars
 	LinkedQueue<Car*>& GetFreeSpecialCars();
