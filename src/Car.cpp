@@ -129,7 +129,7 @@ void Car::addBusyTime(int pickupTime, int finishTime) {
 	totalBusyTime += (finishTime - pickupTime);
 }
 
-int Car::getTotalBusyTime()  {
+int Car::getTotalBusyTime()  const {
 	return totalBusyTime;
 }
 int Car::GetHospitalID() const

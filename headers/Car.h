@@ -68,7 +68,7 @@ public:
 	int GetAssignedPatientID() const;
 	int GetCarID() const;
 	void addBusyTime(int pickupTime, int finishTime);
-	int getTotalBusyTime() ;
+	int getTotalBusyTime() const;
 	//int getTimestepLeft(int ) ;
 	friend std::ostream& operator<<(std::ostream& os, const Car& c);
 
