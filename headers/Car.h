@@ -9,7 +9,9 @@ enum class CAR_STATUS
 {
 	READY,
 	ASSIGNED,
-	LOADED
+	LOADED,
+	IN_CHECKUP,
+	OUT_FAILED
 };
 
 
@@ -30,14 +32,18 @@ private:
 	CAR_TYPE carType;
 	CAR_STATUS carStatus;
 	Patient* assignedPatient;
-	int busyTime;
+	static int staticBusyTime;
 	int startedTime;
 	int arrivalTime; //time at which car arrives at hospital
 	int HID;	// 0-indexed	
 	int CID;	// 0-indexed
 	int speed;
+	int endCheckUpTime;
 	static int staticSpeedNC;
 	static int staticSpeedSC;
+	static int staticOutFailProbability;
+	static int staticCheckUpNC;
+	static int staticCheckUpSC;
 
 public:
 	Car(CAR_TYPE type, int hospitalID, int cid);
@@ -47,19 +53,40 @@ public:
 	Patient* DropOffPatient(int current);	// Car status ->Ready
 	CAR_TYPE GetType() const;
 	CAR_STATUS GetStatus() const;
-	/*int getArrivalTime() const;*/
+	int getArrivalTime() const;
 	int setArrivalTime(int time);
+	void setArrivalTime(int StartTime, int TimeTaken);
 	int gettotaltime() ;
 	int cancel(int current);
-	//void SetStarted(int current);
-	//int getTimeTaken(int Current);
+	void SetStarted(int current);
+	int GetStarted() const;
+	int getTimeTaken(int Current) const;	// Time taken from StartTime to CurrentTimeStep
 	int GetHospitalID() const;
 	int GetAssignedPatientID() const;
 	int GetCarID() const;
 	//int getTimestepLeft(int ) ;
 	friend std::ostream& operator<<(std::ostream& os, const Car& c);
+
+	// Static functions
 	static void SetStaticSpeedNC(int staticSpeedNC);
 	static void SetStaticSpeedSC(int speedsc);
+	static void SetStaticOutFailProbability(int prob);
+	static int GetStaticOutFailProbability();
+	static void AddToStaticBusyTime(int time);
+	static int GetStaticBusyTime();
+	static void SetStaticCheckUpNC(int time);
+	static int GetStaticCheckUpNC();
+	static void SetStaticCheckUpSC(int time);
+	static int GetStaticCheckUpSC();
+
+	// Car Check up
+	void SetCheckUpTimeFinish(int StartTime, int TimeTaken);
+	int GetCheckUpTimeFinish() const;
+	Patient* ReturnPatientToHospital();
+		 
+
 	int GetSpeed() const;
+
+	// Out car failed
 };
 

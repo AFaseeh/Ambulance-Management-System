@@ -2,9 +2,13 @@
 
 int Car::staticSpeedNC = -1;
 int Car::staticSpeedSC = -1;
+int Car::staticOutFailProbability = -1;
+int Car::staticBusyTime = 0;
+int Car::staticCheckUpNC = 0;
+int Car::staticCheckUpSC = 0;
 
 Car::Car(CAR_TYPE type, int hospitalID, int cid) : carType(type), carStatus(CAR_STATUS::READY),
-assignedPatient(nullptr), HID(hospitalID), CID(cid), arrivalTime(0), startedTime(0),busyTime(0)
+assignedPatient(nullptr), HID(hospitalID), CID(cid), arrivalTime(0), startedTime(0), endCheckUpTime(0)
 {
 	if (type == CAR_TYPE::NORMAL_CAR)
 	{
@@ -14,7 +18,6 @@ assignedPatient(nullptr), HID(hospitalID), CID(cid), arrivalTime(0), startedTime
 	{
 		speed = staticSpeedSC;
 	}
-	
 }
 
 void Car::SetStatus(CAR_STATUS status)
@@ -38,7 +41,7 @@ void Car::PickUpPatient(int currentTime)
 		return;
 
 	this->carStatus = CAR_STATUS::LOADED;
-	busyTime += this->gettotaltime();
+	AddToStaticBusyTime(this->gettotaltime());	// busyTime += this->gettotaltime();
 	assignedPatient->setPickUpTime(currentTime) ;
 	startedTime = currentTime;
 }
@@ -49,7 +52,7 @@ Patient* Car::DropOffPatient(int current)
 	if (carStatus != CAR_STATUS::LOADED)
 		return nullptr;
 
-	busyTime += current-startedTime;	
+	AddToStaticBusyTime(current-startedTime); //busyTime += current-startedTime;
 	Patient* patient = this->assignedPatient;
 	this->assignedPatient = nullptr;
 	this->carStatus = CAR_STATUS::READY;
@@ -67,6 +70,11 @@ CAR_STATUS Car::GetStatus() const
 	return carStatus;
 }
 
+int Car::getArrivalTime() const
+{
+	return arrivalTime;
+}
+
 
 int Car::setArrivalTime(int time)
 {
@@ -74,6 +82,12 @@ int Car::setArrivalTime(int time)
 	startedTime = time;
 	arrivalTime = time+this->gettotaltime();
 	return arrivalTime;
+}
+
+void Car::setArrivalTime(int StartTime, int TimeTaken)
+{
+	startedTime = StartTime;
+	arrivalTime = StartTime + TimeTaken;
 }
 
 int Car::gettotaltime()
@@ -86,18 +100,30 @@ int Car::cancel(int current)
 {
 	//used
 	int time_taken = current - startedTime;
-	busyTime += time_taken;
+	AddToStaticBusyTime(time_taken);	//busyTime += time_taken;
 	arrivalTime = current + time_taken;
 	startedTime = current;
 	return (arrivalTime);
 }
 
+void Car::SetStarted(int current)
+{
+	if (current >= startedTime)
+	{
+		startedTime = current;
+	}
+}
+
+int Car::GetStarted() const
+{
+	return startedTime;
+}
 
 
-
-
-
-
+int Car::getTimeTaken(int Current) const
+{
+	return Current-startedTime;
+}
 
 int Car::GetHospitalID() const
 {
@@ -126,6 +152,66 @@ void Car::SetStaticSpeedNC(int speednc)
 void Car::SetStaticSpeedSC(int speedsc)
 {
 	staticSpeedSC = speedsc;
+}
+
+void Car::SetStaticOutFailProbability(int prob)
+{
+	if (prob >= 0 && prob <= 100)
+	{
+		staticOutFailProbability = prob;
+	}
+}
+
+int Car::GetStaticOutFailProbability()
+{
+	return staticOutFailProbability;
+}
+
+void Car::AddToStaticBusyTime(int time)
+{
+	staticBusyTime += time;
+}
+
+int Car::GetStaticBusyTime()
+{
+	return staticBusyTime;
+}
+
+void Car::SetStaticCheckUpNC(int time)
+{
+	staticCheckUpNC = time;
+}
+
+int Car::GetStaticCheckUpNC()
+{
+	return staticCheckUpNC;
+}
+
+void Car::SetStaticCheckUpSC(int time)
+{
+	staticCheckUpSC = time;
+}
+
+int Car::GetStaticCheckUpSC()
+{
+	return staticCheckUpSC;
+}
+
+void Car::SetCheckUpTimeFinish(int StartTime, int TimeTaken)
+{
+	endCheckUpTime = StartTime + TimeTaken;
+}
+
+int Car::GetCheckUpTimeFinish() const
+{
+	return endCheckUpTime;
+}
+
+Patient* Car::ReturnPatientToHospital()
+{
+	Patient* p = assignedPatient;
+	assignedPatient = nullptr;
+	return p;
 }
 
 int Car::GetSpeed() const

@@ -141,6 +141,9 @@ void Organiser::UpdateTimeStep(int time)
 			return;
 		}
 	}
+
+
+
 }
 
 
@@ -164,11 +167,14 @@ void Organiser::LoadFile()
 		hospitals[i] = new Hospital(this, i);
 	}
 
-	// Loading Speed of Cars
-	int speedSC, speedNC;
-	fin >> speedSC >> speedNC;
-	Car::SetStaticSpeedNC(speedNC);
-	Car::SetStaticSpeedSC(speedSC);
+    // Loading Speed of Cars
+    int speedSC, speedNC, outfailprobability;
+    fin >> speedSC >> speedNC;
+    fin >> outfailprobability;
+    Car::SetStaticSpeedNC(speedNC);
+    Car::SetStaticSpeedSC(speedSC);
+    Car::SetStaticOutFailProbability(outfailprobability);
+
 
 	// Distance Matrix of size (hospitalNum * hospitalNum)
 	distanceMatrix = new int* [hospitalNumber];
@@ -267,8 +273,17 @@ void Organiser::returnCar(int CurrentStep)
 	int arrTime = -1;
 	while (BackCars.peek(car, arrTime) && arrTime == CurrentStep) {
 		BackCars.dequeue(car, arrTime);
-		hospitals[car->GetHospitalID()]->CarBack(car);
-		FinishedRequest.enqueue(car->DropOffPatient(CurrentStep));
+		
+		switch (car->GetStatus())
+		{
+		case CAR_STATUS::OUT_FAILED:
+			hospitals[car->GetHospitalID()]->FailedCarBack(car, CurrentStep);
+			break;	
+		default:
+			hospitals[car->GetHospitalID()]->CarBack(car);
+			FinishPatient(car->DropOffPatient(CurrentStep));
+			break;
+		}
 	}
 }
 
@@ -287,6 +302,14 @@ void Organiser::cancelRequest(int timestep)
 			BackCars.enqueue(car, car->cancel(timestep));
 		}
 		
+	}
+}
+
+void Organiser::FinishPatient(Patient* p)
+{
+	if (p)
+	{
+		AllPatients.enqueue(p);
 	}
 }
 
@@ -325,4 +348,32 @@ void Organiser::SendPatientsToHospital(int time)
 	}
 }
 
+int Organiser::FailOutCar(int currentTimeStep)
+{
+	Car* c = OutCars.GetRandomOutCarToFail();
 
+	if (c == nullptr)
+	{
+		return -2;
+	}
+
+	Car* x = OutCars.cancelRequest(c->GetAssignedPatientID());
+
+	if (c != x)
+	{
+		return -1;
+	}
+
+	c->SetStatus(CAR_STATUS::OUT_FAILED);
+	c->setArrivalTime(currentTimeStep, c->getTimeTaken(currentTimeStep));
+	BackCars.enqueue(c, -c->getArrivalTime());
+	return 0;
+}
+
+void Organiser::ReturnCarsFromCheckUp(int time)
+{
+	for (int i = 0; i < hospitalNumber; i++)
+	{
+		hospitals[i]->CompleteCarsCheckUp(time);
+	}
+}
