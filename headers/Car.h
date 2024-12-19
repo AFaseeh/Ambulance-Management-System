@@ -30,6 +30,8 @@ class Car
 
 private:
 	CAR_TYPE carType;
+		int totalBusyTime;
+
 	CAR_STATUS carStatus;
 	Patient* assignedPatient;
 	static int staticBusyTime;
@@ -40,6 +42,7 @@ private:
 	int speed;
 	int endCheckUpTime;
 	static int staticSpeedNC;
+
 	static int staticSpeedSC;
 	static int staticOutFailProbability;
 	static int staticCheckUpNC;
@@ -64,6 +67,8 @@ public:
 	int GetHospitalID() const;
 	int GetAssignedPatientID() const;
 	int GetCarID() const;
+	void addBusyTime(int pickupTime, int finishTime);
+	int getTotalBusyTime() ;
 	//int getTimestepLeft(int ) ;
 	friend std::ostream& operator<<(std::ostream& os, const Car& c);
 

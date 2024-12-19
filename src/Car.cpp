@@ -1,4 +1,4 @@
-#include "../headers/Car.h"
+﻿#include "../headers/Car.h"
 
 int Car::staticSpeedNC = -1;
 int Car::staticSpeedSC = -1;
@@ -10,6 +10,7 @@ int Car::staticCheckUpSC = 0;
 Car::Car(CAR_TYPE type, int hospitalID, int cid) : carType(type), carStatus(CAR_STATUS::READY),
 assignedPatient(nullptr), HID(hospitalID), CID(cid), arrivalTime(0), startedTime(0), endCheckUpTime(0)
 {
+	totalBusyTime = 0;
 	if (type == CAR_TYPE::NORMAL_CAR)
 	{
 		speed = staticSpeedNC;
@@ -28,6 +29,7 @@ void Car::SetStatus(CAR_STATUS status)
 //set patient and change start time
 void Car::AssignPatient(Patient* patient,int CurrentTime)
 {
+	startedTime = CurrentTime;
 	if (carStatus != CAR_STATUS::READY)
 		return;
 	this->carStatus = CAR_STATUS::ASSIGNED;
@@ -36,7 +38,6 @@ void Car::AssignPatient(Patient* patient,int CurrentTime)
 
 void Car::PickUpPatient(int currentTime)
 {
-	//used
 	if (assignedPatient == nullptr)
 		return;
 
@@ -45,10 +46,8 @@ void Car::PickUpPatient(int currentTime)
 	assignedPatient->setPickUpTime(currentTime) ;
 	startedTime = currentTime;
 }
-
 Patient* Car::DropOffPatient(int current)
 {
-	//usedd
 	if (carStatus != CAR_STATUS::LOADED)
 		return nullptr;
 
@@ -59,6 +58,7 @@ Patient* Car::DropOffPatient(int current)
 
 	return patient;
 }
+
 
 CAR_TYPE Car::GetType() const
 {
@@ -125,6 +125,13 @@ int Car::getTimeTaken(int Current) const
 	return Current-startedTime;
 }
 
+void Car::addBusyTime(int pickupTime, int finishTime) {
+	totalBusyTime += (finishTime - pickupTime);
+}
+
+int Car::getTotalBusyTime()  {
+	return totalBusyTime;
+}
 int Car::GetHospitalID() const
 {
 	return HID;

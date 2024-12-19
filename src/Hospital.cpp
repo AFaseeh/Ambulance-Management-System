@@ -19,7 +19,13 @@ Hospital::~Hospital()
             delete c;
     }
 }
+LinkedQueue<Car*>& Hospital::GetFreeSpecialCars() {
+    return freeSpecialCars;
+}
 
+LinkedQueue<Car*>& Hospital::GetFreeNormalCars() {
+    return freeNormalCars;
+}
 void Hospital::addpatient(Patient* t) {
     switch (t->GetType()) {
     case NP:
