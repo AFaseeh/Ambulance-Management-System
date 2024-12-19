@@ -375,28 +375,6 @@ void Organiser::ReturnCarsFromCheckUp(int time)
 	}
 }
 
-
-	Car* x = OutCars.cancelRequest(c->GetAssignedPatientID());
-
-	if (c != x)
-	{
-		return -1;
-	}
-
-	c->SetStatus(CAR_STATUS::OUT_FAILED);
-	c->setArrivalTime(currentTimeStep, c->getTimeTaken(currentTimeStep));
-	BackCars.enqueue(c, -c->getArrivalTime());
-	return 0;
-}
-
-void Organiser::ReturnCarsFromCheckUp(int time)
-{
-	for (int i = 0; i < hospitalNumber; i++)
-	{
-		hospitals[i]->CompleteCarsCheckUp(time);
-	}
-}
-
 void Organiser::GenerateOutputFile(int timestep) {
 
 	std::ofstream myfile("output.txt");
