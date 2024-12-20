@@ -32,18 +32,18 @@ public:
 	void AddPatient(Patient* patient);	// add patient to allPatients queue			**
 	void returnCar(int CurrentStep);			//											**
 
-	//void cancelRequest(int timestep);	//											**
+	void cancelRequest(int timestep);	//											**
 
 	void FinishPatient(Patient* p);
 	// Collect statistics that are needed to create output file
 	void PrintInfo();
 	
 	//Phase 1.2
-	void SimulatorFunc();
 	void SendPatientsToHospital(int time);
 
 	//Phase 2
-	void Sendpatient(Patient* p, int distance);
+	void SendPatientToNearestHospital(Patient* p, int distance);
+	void AssignAllPatientsToCars(int time);
 
 	int FailOutCar(int currentTimeStep);
 	void ReturnCarsFromCheckUp(int currentTimeStep);
@@ -53,5 +53,4 @@ public:
 	bool SimulationFinished();
 	void MainSimulation();
 	void ReadInput();
-	void SendOutCars();
 };

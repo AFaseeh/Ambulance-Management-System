@@ -15,6 +15,7 @@ Car* OutCarsPriQueue::cancelRequest(int pid)
 		priNode<Car*>* todelete = head;
 		head = head->getNext();
 		delete todelete;
+		count--;
 		return (p->getItem(trashcan));
 	}
 
@@ -26,6 +27,7 @@ Car* OutCarsPriQueue::cancelRequest(int pid)
 			car = p->getNext()->getItem(trashcan);
 			p->setNext(p->getNext()->getNext());
 			delete todelete;
+			count--;
 			return car;
 		}
 		p = p->getNext();
@@ -47,8 +49,11 @@ void OutCarsPriQueue::print()
 
 Car* OutCarsPriQueue::GetRandomOutCarToFail()
 {
+	if (Car::GetStaticOutFailProbability() == 0)
+		return nullptr;
+
 	int random = rand() % 101;	// 0 -> 100
-	if (random >= 0 && random <= Car::GetStaticOutFailProbability())
+	if (random >= 0 && random <= Car::GetStaticOutFailProbability() && count > 0)
 	{
 		random = (rand() % this->count);
 	}

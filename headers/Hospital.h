@@ -40,9 +40,10 @@ public:
 	Patient* FinishNP();
 
 	//assigning paitents
-	void AssignNP();
-	void AssignSP();
-	void AssignEP();
+	void AssignHospitalPatientsToCars(int time);
+	Car* AssignNP();
+	Car* AssignSP();
+	Car* AssignEP();
 	
 	int CalculateBusyTimeAtEndOfSimulation(CAR_TYPE type);
 

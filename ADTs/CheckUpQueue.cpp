@@ -27,9 +27,13 @@ void CheckUpQueue::AddCarToCheckUp(Car* toAddCar, int currentTime)
 Car* CheckUpQueue::ReturnCarFromCheckUp(int currentTime)
 {
 	Car* c = nullptr;
-	if (peek(c) && c->GetCheckUpTimeFinish() == currentTime)
+	if (isEmpty() == false && peek(c) && c->GetCheckUpTimeFinish() == currentTime)
 	{
 		dequeue(c);
+	}
+	else
+	{
+		c = nullptr;
 	}
 
 	return c;

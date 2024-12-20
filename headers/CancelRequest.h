@@ -3,7 +3,7 @@ class CancelRequest
 {
 	int pid;
 	int cancelTime;
-	int hospitalID;     
+	int hospitalID;
 public:
 	CancelRequest(int pid, int cancelTime, int hid);
 	int getPID() const;

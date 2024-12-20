@@ -82,7 +82,7 @@ void Hospital::FailedCarBack(Car* car, int timeStep)
         CheckUpList.AddCarToCheckUp(car, timeStep);
         Patient* p = car->ReturnPatientToHospital();
         ReassignPatientToHospital(p);
-        
+        car->SetStatus(CAR_STATUS::IN_CHECKUP);
         return;
     }
 }
@@ -90,12 +90,14 @@ void Hospital::FailedCarBack(Car* car, int timeStep)
 void Hospital::CompleteCarsCheckUp(int timestep)
 {
     Car* c = nullptr;
-    do
+    c = CheckUpList.ReturnCarFromCheckUp(timestep);
+
+    while (c != nullptr)
     {
+        c->SetStatus(CAR_STATUS::READY);
+        CarBack(c);
         c = CheckUpList.ReturnCarFromCheckUp(timestep);
-        if (c != nullptr)
-            CarBack(c);
-    } while (c != nullptr);
+    }
 }
 
 void Hospital::ReassignPatientToHospital(Patient* p)
@@ -127,6 +129,7 @@ Car* Hospital::OutCar(CAR_TYPE type)
         freeSpecialCars.dequeue(toreturn);
     else
         freeNormalCars.dequeue(toreturn);
+    toreturn->SetStatus(CAR_STATUS::ASSIGNED);
     return toreturn;
 }
 
@@ -150,6 +153,31 @@ Patient* Hospital::FinishNP()
     Patient* toreturn = nullptr;
     npQueue.dequeue(toreturn);
     return toreturn;
+}
+
+void Hospital::AssignHospitalPatientsToCars(int time)
+{
+    Car* c = nullptr;
+    c = AssignEP();
+    while (c != nullptr)
+    {
+        organiser->Addout_Car(c, time);
+        c = AssignEP();
+    }
+
+    c = AssignSP();
+    while (c != nullptr)
+    {
+        organiser->Addout_Car(c, time);
+        c = AssignSP();
+    }
+
+    c = AssignNP();
+    while (c != nullptr)
+    {
+        organiser->Addout_Car(c, time);
+        c = AssignNP();
+    }
 }
 
 int Hospital::CalculateBusyTimeAtEndOfSimulation(CAR_TYPE type)
@@ -197,82 +225,66 @@ ostream& operator<<(ostream& os, const Hospital& h)
 }
 
 
-void Hospital::AssignNP() {
+Car* Hospital::AssignNP() {
     Patient *p = nullptr;
     Car* c=nullptr;
-    if (!npQueue.isEmpty() && !freeNormalCars.isEmpty())
+    if (npQueue.isEmpty() || freeNormalCars.isEmpty())
     {
-        npQueue.dequeue(p);
-
-        freeNormalCars.dequeue(c);
-
-        c->AssignPatient(p,p->GetRequestTime());
-        return;
-
+        return nullptr;
     }
-    else if(!npQueue.isEmpty() && freeNormalCars.isEmpty())
-    {
-        npQueue.dequeue(p);
 
-        freeSpecialCars.dequeue(c);
+    npQueue.dequeue(p);
 
-        c->AssignPatient(p, p->GetRequestTime());
+    freeNormalCars.dequeue(c);
 
-    }
-    return;
+    c->AssignPatient(p, p->GetRequestTime());
+    return c;
 }
-
-void Hospital::AssignSP() {
+Car* Hospital::AssignSP() {
     Patient* p = nullptr;
     Car* c = nullptr;
-    if (!spQueue.isEmpty() && !freeSpecialCars.isEmpty())
+    if (spQueue.isEmpty() || freeSpecialCars.isEmpty())
     {
-
-        spQueue.dequeue(p);
-
-        freeSpecialCars.dequeue(c);
-
-        c->AssignPatient(p, p->GetRequestTime());
-        return;
+        return nullptr;
     }
-    else if (!spQueue.isEmpty() && !freeNormalCars.isEmpty())
-    {
-        spQueue.dequeue(p);
-        
-        freeNormalCars.dequeue(c);
-        
-        c->AssignPatient(p,p->GetRequestTime());
-        return;
-    }
-    return;
+
+    spQueue.dequeue(p);
+    freeSpecialCars.dequeue(c);
+    c->AssignPatient(p, p->GetRequestTime());
+
+    return c;
 }
-void Hospital::AssignEP() {
+Car* Hospital::AssignEP() {
     Patient* p = nullptr;
     Car* c = nullptr;
     int pri;
 
-    if (!epQueue.isEmpty() && !freeNormalCars.isEmpty())
+    if (epQueue.isEmpty())
+    {
+        return nullptr;
+    }
+
+    if (!freeNormalCars.isEmpty())
     {
         epQueue.dequeue(p,pri);
 
         freeNormalCars.dequeue(c);
 
         c->AssignPatient(p, p->GetRequestTime());
-        return;
-
     }
-    else if (!epQueue.isEmpty() && freeNormalCars.isEmpty())
+    else if (!freeSpecialCars.isEmpty())
     {
         epQueue.dequeue(p, pri);
 
         freeSpecialCars.dequeue(c);
 
         c->AssignPatient(p, p->GetRequestTime());
-        return;
     }
     else
     {
-        
-        organiser->Sendpatient(p,this->hospitalID);
+        organiser->SendPatientToNearestHospital(p,this->hospitalID);
+        c = nullptr;
     }
+
+    return c;
 }

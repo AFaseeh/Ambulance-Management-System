@@ -6,7 +6,6 @@
 #include <string>
 #include <iomanip>
 #include <fstream>
-#include <limits>
 
 using namespace std;
 
@@ -31,139 +30,28 @@ Organiser::~Organiser() {
 			delete p;
 	}
 }
-void Organiser::SimulatorFunc()
-{
-	int mode = 0;
-	int count = 0;
-
-	LoadFile();
-	ui->EnterProgramMode();
-
-
-	if (mode == 1)
-	{
-		cout << "Silent Mode, Simulation Starts..." << endl;
-
-		while (FinishedRequest.getCount() != numOfRequests && ++count)
-		{
-			SendPatientsToHospital(count);
-
-			UpdateTimeStep(count);
-		}
-
-		GenerateOutputFile(count);
-		cout << "Simulation ends, Output file created." << endl;
-	}
-	else
-	{
-		cout << "Invalid mode selected. Please restart the program." << endl;
-	}
-}
 
 void Organiser::UpdateTimeStep(int time)
 {
-	//for (int i = 0; i < hospitalNumber; i++) {
-	//	int random = rand() % 100 + 1;
-	//	string message;
-	//	bool done = true;
-	//	if (random >= 91 && random < 95) {
-	//		message = "Move From Back to free ";
-	//		returnCar(time);
-	//		if (done) {
-	//			message = message + "\n";
-	//		}
-	//		else {
-	//			message = message + "(No available car)\n";
-	//		}
-	//	}
-	//	else if (random >= 80 && random < 90) {
-	//		message = "Move from Out to Back ";
-	//		SwitchOutToBack(time);
-	//		if (done) {
-	//			message = message + "\n";
-	//		}
-	//		else {
-	//			message = message + "(No available car)\n";
-	//		}
-	//	}
-	//	else if (random >= 70 && random < 75) {
-	//		message = "Moving NCar from hospital[" + std::to_string(i) + "] to out list CID: ";
-	//		Car* free = hospitals[i]->OutCar(CAR_TYPE::NORMAL_CAR);
-	//		if (free) {
-	//			message = message + std::to_string(free->GetCarID()) + "\n";
-	//			OutCars.enqueue(free, 0);
-	//		}
-	//		else {
-	//			message = message + "No available car\n";
-	//		}
-	//	}
-	//	else if (random >= 40 && random < 45) {
-	//		message = "Moving SCar from hospital[" + std::to_string(i) + "] to out list CID: ";
-	//		Car* free = hospitals[i]->OutCar(CAR_TYPE::SPECIAL_CAR);
-	//		if (free) {
-	//			message = message + std::to_string(free->GetCarID()) + "\n";
-	//			OutCars.enqueue(free, 0);
-	//		}
-	//		else {
-	//			message = message + "No available car\n";
-	//		}
-	//	}
-	//	else if (random >= 30 && random < 40) {
-	//		message = "Moving NP from hospital[" + std::to_string(i) + "] to finish list PID: ";
-	//		Patient* free = hospitals[i]->FinishNP();
-	//		if (free) {
-	//			message = message + std::to_string(free->GetID()) + "\n";
-	//			FinishedRequest.enqueue(free);
-	//		}
-	//		else {
-	//			message = message + "No available Patient\n";
-	//		}
-	//	}
-	//	else if (random >= 20 && random < 25) {
-	//		message = "Moving EP from hospital[" + std::to_string(i) + "] to finish list PID: ";
-	//		Patient* free = hospitals[i]->FinishEP();
-	//		if (free) {
-	//			message = message + std::to_string(free->GetID()) + "\n";
-	//			FinishedRequest.enqueue(free);
-	//		}
-	//		else {
-	//			message = message + "No available Patient\n";
-	//		}
-	//	}
-	//	else if (random >= 10 && random < 20) {
-	//		message = "Moving SP from hospital[" + std::to_string(i) + "] to finish list PID: ";
-	//		Patient* free = hospitals[i]->FinishSP();
-	//		if (free) {
-	//			message = message + std::to_string(free->GetID()) + "\n";
-	//			FinishedRequest.enqueue(free);
-	//		}
-	//		else {
-	//			message = message + "No available Patient\n";
-	//		}
-	//	}
-	//	if (mode == 0) {
-	//		ui->PrintTimeStep(this, time, hospitals[i], message);
-	//		if (FinishedRequest.getCount() > 0) {
-	//			message = "Finished Requests: " + std::to_string(FinishedRequest.getCount()) + "\n";
-	//			ui->PrintMessage(message);
-	//		}
-	//	}
-	//	if (FinishedRequest.getCount() == numOfRequests) {
-	//		ui->PrintMessage("Finished Simulation");
-	//		return;
-	//	}
-	//}
+	for (int i = 0; i < hospitalNumber; i++)
+	{
+		hospitals[i]->CompleteCarsCheckUp(time);
+	}
+	//cancelRequest(time);
 
 	SendPatientsToHospital(time);
 	string msg = "";
 
-	this->SwitchOutToBack(time);
-	this->returnCar(time);
 	int failedcarid = FailOutCar(time);
 	if (failedcarid >= 0)
 	{
-		msg += "Failed CID: \t" + failedcarid;
+		msg += "Failed CID: " + std::to_string(failedcarid) + "\n";
 	}
+
+	SwitchOutToBack(time);
+	returnCar(time);
+
+	AssignAllPatientsToCars(time);
 
 	for (int i = 0; i < hospitalNumber; i++)
 	{
@@ -341,6 +229,28 @@ void Organiser::SendPatientsToHospital(int time)
 	}
 }
 
+void Organiser::SendPatientToNearestHospital(Patient* p, int distance)
+{
+	//int newHID;
+	if (hospitalNumber == 1)
+	{
+			hospitals[p->GetHID()]->addpatient(p);
+	}
+
+	int next_hosital = (p->GetHID() + 1) % hospitalNumber;
+	int min = distanceMatrix[p->GetHID()][next_hosital];
+	for (int i = 0; i < hospitalNumber; i++)
+	{
+		if (distanceMatrix[p->GetHID()][i] < min && distanceMatrix[p->GetHID()][i] != 0)
+		{
+			min = distanceMatrix[p->GetHID()][i];
+			p->SetHID(i);
+		}
+	}
+	p->SetDistance(min + distance);
+	hospitals[p->GetHID()]->addpatient(p);
+}
+
 int Organiser::FailOutCar(int currentTimeStep)
 {
 	Car* c = OutCars.GetRandomOutCarToFail();
@@ -356,6 +266,7 @@ int Organiser::FailOutCar(int currentTimeStep)
 	{
 		return -1;
 	}
+
 
 	c->SetStatus(CAR_STATUS::OUT_FAILED);
 	c->setArrivalTime(currentTimeStep, c->getTimeTaken(currentTimeStep));
@@ -465,6 +376,10 @@ void Organiser::ReadInput()
 	ui->EnterProgramMode();
 }
 
-void Organiser::SendOutCars()
+void Organiser::AssignAllPatientsToCars(int time)
 {
+	for (int i = 0; i < hospitalNumber; i++)
+	{
+		hospitals[i]->AssignHospitalPatientsToCars(time);
+	}
 }

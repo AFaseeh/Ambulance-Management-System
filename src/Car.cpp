@@ -29,9 +29,10 @@ void Car::SetStatus(CAR_STATUS status)
 //set patient and change start time
 void Car::AssignPatient(Patient* patient,int CurrentTime)
 {
-	startedTime = CurrentTime;
 	if (carStatus != CAR_STATUS::READY)
 		return;
+	
+	startedTime = CurrentTime;
 	this->carStatus = CAR_STATUS::ASSIGNED;
 	this->assignedPatient = patient;
 }
@@ -90,7 +91,7 @@ void Car::setArrivalTime(int StartTime, int TimeTaken)
 	arrivalTime = StartTime + TimeTaken;
 }
 
-int Car::gettotaltime()
+int Car::gettotaltime() const
 {
 	//usedd
 	return assignedPatient->getDistance()/speed;

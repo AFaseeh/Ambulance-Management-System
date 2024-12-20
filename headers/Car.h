@@ -59,7 +59,7 @@ public:
 	int getArrivalTime() const;
 	int setArrivalTime(int time);
 	void setArrivalTime(int StartTime, int TimeTaken);
-	int gettotaltime() ;
+	int gettotaltime() const;
 	int cancel(int current);
 	void SetStarted(int current);
 	int GetStarted() const;
