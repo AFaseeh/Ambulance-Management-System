@@ -43,6 +43,8 @@ public:
 	void SendPatientsToHospital(int time);
 
 	//Phase 2
+	void Sendpatient(Patient* p, int distance);
+
 	int FailOutCar(int currentTimeStep);
 	void ReturnCarsFromCheckUp(int currentTimeStep);
   

@@ -25,7 +25,7 @@ public:
 	~Hospital();
 	void addpatient(Patient* t);
 	Patient* removepatient(int pid);
-	void Assignpatient(Patient* t);
+	void Assignpatient();
 	void LoadCars(int sCars, int nCars);
 	
 	friend ostream& operator<<(ostream& os, const Hospital& h);
@@ -39,6 +39,11 @@ public:
 	Patient* FinishEP();
 	Patient* FinishNP();
 
+	//assigning paitents
+	void AssignNP();
+	void AssignSP();
+	void AssignEP();
+	
 	int CalculateBusyTimeAtEndOfSimulation(CAR_TYPE type);
 
 };
