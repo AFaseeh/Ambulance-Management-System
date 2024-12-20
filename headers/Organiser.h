@@ -24,7 +24,7 @@ public:
 	Organiser();
 	~Organiser();
 
-	void UpdateTimeStep(int time, int mode);		// Gets called Every timestep
+	void UpdateTimeStep(int time);		// Gets called Every timestep
 
 	void LoadFile();					// Loads file at program startup
 	void Addout_Car(Car* car,int CurrentStep);			//											**
@@ -48,4 +48,8 @@ public:
   
 	void GenerateOutputFile(int timestep);
 
+	bool SimulationFinished();
+	void MainSimulation();
+	void ReadInput();
+	void SendOutCars();
 };

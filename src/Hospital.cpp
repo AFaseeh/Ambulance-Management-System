@@ -19,13 +19,7 @@ Hospital::~Hospital()
             delete c;
     }
 }
-LinkedQueue<Car*>& Hospital::GetFreeSpecialCars() {
-    return freeSpecialCars;
-}
 
-LinkedQueue<Car*>& Hospital::GetFreeNormalCars() {
-    return freeNormalCars;
-}
 void Hospital::addpatient(Patient* t) {
     switch (t->GetType()) {
     case NP:
@@ -210,6 +204,29 @@ Patient* Hospital::FinishNP()
     Patient* toreturn = nullptr;
     npQueue.dequeue(toreturn);
     return toreturn;
+}
+
+int Hospital::CalculateBusyTimeAtEndOfSimulation(CAR_TYPE type)
+{
+    Car* c = nullptr;
+    int totalbusytime = 0;
+    switch (type)
+    {
+    case CAR_TYPE::NORMAL_CAR:
+        while (freeNormalCars.dequeue(c)) {
+            totalbusytime += c->getTotalBusyTime();
+        }
+        break;
+    case CAR_TYPE::SPECIAL_CAR:
+        while (freeSpecialCars.dequeue(c)) {
+            totalbusytime += c->getTotalBusyTime();
+        }
+        break;
+    default:
+        break;
+    }
+    
+    return totalbusytime;
 }
 
 ostream& operator<<(ostream& os, const Hospital& h)

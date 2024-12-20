@@ -27,11 +27,6 @@ public:
 	Patient* removepatient(int pid);
 	void Assignpatient(Patient* t);
 	void LoadCars(int sCars, int nCars);
-	// Getter for freeSpecialCars
-	LinkedQueue<Car*>& GetFreeSpecialCars();
-
-	// Getter for freeNormalCars
-	LinkedQueue<Car*>& GetFreeNormalCars();
 	
 	friend ostream& operator<<(ostream& os, const Hospital& h);
 	// Phase 1.2
@@ -43,5 +38,7 @@ public:
 	Patient* FinishSP();
 	Patient* FinishEP();
 	Patient* FinishNP();
+
+	int CalculateBusyTimeAtEndOfSimulation(CAR_TYPE type);
 
 };

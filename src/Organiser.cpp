@@ -32,32 +32,14 @@ Organiser::~Organiser() {
 }
 void Organiser::SimulatorFunc()
 {
-	int mode;
+	int mode = 0;
 	int count = 0;
 
-	cout << "Please select mode of operation: 0 for Interactive Mode, 1 for Silent Mode: ";
-	cin >> mode;
-
 	LoadFile();
+	ui->EnterProgramMode();
 
-	if (mode == 0) {
-		cout << "Interactive Mode, Simulation Starts..." << endl;
-		while (FinishedRequest.getCount() != numOfRequests && ++count)
-		{
-			cout << "Current Timestep: " << count << endl;
-			SendPatientsToHospital(count);
 
-			UpdateTimeStep(count,mode);
-
-			cout << "Press any key to continue to the next timestep..." << endl;
-			cin.ignore();
-			cin.get();
-		}
-
-		GenerateOutputFile(count);
-		cout << "Simulation ends, Output file created." << endl;
-	}
-	else if (mode == 1)
+	if (mode == 1)
 	{
 		cout << "Silent Mode, Simulation Starts..." << endl;
 
@@ -65,7 +47,7 @@ void Organiser::SimulatorFunc()
 		{
 			SendPatientsToHospital(count);
 
-			UpdateTimeStep(count,mode);
+			UpdateTimeStep(count);
 		}
 
 		GenerateOutputFile(count);
@@ -77,102 +59,115 @@ void Organiser::SimulatorFunc()
 	}
 }
 
-void Organiser::UpdateTimeStep(int time, int mode)
+void Organiser::UpdateTimeStep(int time)
 {
-	for (int i = 0; i < hospitalNumber; i++) {
-		int random = rand() % 100 + 1;
-		string message;
-		bool done = true;
+	//for (int i = 0; i < hospitalNumber; i++) {
+	//	int random = rand() % 100 + 1;
+	//	string message;
+	//	bool done = true;
+	//	if (random >= 91 && random < 95) {
+	//		message = "Move From Back to free ";
+	//		returnCar(time);
+	//		if (done) {
+	//			message = message + "\n";
+	//		}
+	//		else {
+	//			message = message + "(No available car)\n";
+	//		}
+	//	}
+	//	else if (random >= 80 && random < 90) {
+	//		message = "Move from Out to Back ";
+	//		SwitchOutToBack(time);
+	//		if (done) {
+	//			message = message + "\n";
+	//		}
+	//		else {
+	//			message = message + "(No available car)\n";
+	//		}
+	//	}
+	//	else if (random >= 70 && random < 75) {
+	//		message = "Moving NCar from hospital[" + std::to_string(i) + "] to out list CID: ";
+	//		Car* free = hospitals[i]->OutCar(CAR_TYPE::NORMAL_CAR);
+	//		if (free) {
+	//			message = message + std::to_string(free->GetCarID()) + "\n";
+	//			OutCars.enqueue(free, 0);
+	//		}
+	//		else {
+	//			message = message + "No available car\n";
+	//		}
+	//	}
+	//	else if (random >= 40 && random < 45) {
+	//		message = "Moving SCar from hospital[" + std::to_string(i) + "] to out list CID: ";
+	//		Car* free = hospitals[i]->OutCar(CAR_TYPE::SPECIAL_CAR);
+	//		if (free) {
+	//			message = message + std::to_string(free->GetCarID()) + "\n";
+	//			OutCars.enqueue(free, 0);
+	//		}
+	//		else {
+	//			message = message + "No available car\n";
+	//		}
+	//	}
+	//	else if (random >= 30 && random < 40) {
+	//		message = "Moving NP from hospital[" + std::to_string(i) + "] to finish list PID: ";
+	//		Patient* free = hospitals[i]->FinishNP();
+	//		if (free) {
+	//			message = message + std::to_string(free->GetID()) + "\n";
+	//			FinishedRequest.enqueue(free);
+	//		}
+	//		else {
+	//			message = message + "No available Patient\n";
+	//		}
+	//	}
+	//	else if (random >= 20 && random < 25) {
+	//		message = "Moving EP from hospital[" + std::to_string(i) + "] to finish list PID: ";
+	//		Patient* free = hospitals[i]->FinishEP();
+	//		if (free) {
+	//			message = message + std::to_string(free->GetID()) + "\n";
+	//			FinishedRequest.enqueue(free);
+	//		}
+	//		else {
+	//			message = message + "No available Patient\n";
+	//		}
+	//	}
+	//	else if (random >= 10 && random < 20) {
+	//		message = "Moving SP from hospital[" + std::to_string(i) + "] to finish list PID: ";
+	//		Patient* free = hospitals[i]->FinishSP();
+	//		if (free) {
+	//			message = message + std::to_string(free->GetID()) + "\n";
+	//			FinishedRequest.enqueue(free);
+	//		}
+	//		else {
+	//			message = message + "No available Patient\n";
+	//		}
+	//	}
+	//	if (mode == 0) {
+	//		ui->PrintTimeStep(this, time, hospitals[i], message);
+	//		if (FinishedRequest.getCount() > 0) {
+	//			message = "Finished Requests: " + std::to_string(FinishedRequest.getCount()) + "\n";
+	//			ui->PrintMessage(message);
+	//		}
+	//	}
+	//	if (FinishedRequest.getCount() == numOfRequests) {
+	//		ui->PrintMessage("Finished Simulation");
+	//		return;
+	//	}
+	//}
 
-		if (random >= 91 && random < 95) {
-			message = "Move From Back to free ";
-			returnCar(time);
-			if (done) {
-				message = message + "\n";
-			}
-			else {
-				message = message + "(No available car)\n";
-			}
-		}
-		else if (random >= 80 && random < 90) {
-			message = "Move from Out to Back ";
-			SwitchOutToBack(time);
-			if (done) {
-				message = message + "\n";
-			}
-			else {
-				message = message + "(No available car)\n";
-			}
-		}
-		else if (random >= 70 && random < 75) {
-			message = "Moving NCar from hospital[" + std::to_string(i) + "] to out list CID: ";
-			Car* free = hospitals[i]->OutCar(CAR_TYPE::NORMAL_CAR);
-			if (free) {
-				message = message + std::to_string(free->GetCarID()) + "\n";
-				OutCars.enqueue(free, 0);
-			}
-			else {
-				message = message + "No available car\n";
-			}
-		}
-		else if (random >= 40 && random < 45) {
-			message = "Moving SCar from hospital[" + std::to_string(i) + "] to out list CID: ";
-			Car* free = hospitals[i]->OutCar(CAR_TYPE::SPECIAL_CAR);
-			if (free) {
-				message = message + std::to_string(free->GetCarID()) + "\n";
-				OutCars.enqueue(free, 0);
-			}
-			else {
-				message = message + "No available car\n";
-			}
-		}
-		else if (random >= 30 && random < 40) {
-			message = "Moving NP from hospital[" + std::to_string(i) + "] to finish list PID: ";
-			Patient* free = hospitals[i]->FinishNP();
-			if (free) {
-				message = message + std::to_string(free->GetID()) + "\n";
-				FinishedRequest.enqueue(free);
-			}
-			else {
-				message = message + "No available Patient\n";
-			}
-		}
-		else if (random >= 20 && random < 25) {
-			message = "Moving EP from hospital[" + std::to_string(i) + "] to finish list PID: ";
-			Patient* free = hospitals[i]->FinishEP();
-			if (free) {
-				message = message + std::to_string(free->GetID()) + "\n";
-				FinishedRequest.enqueue(free);
-			}
-			else {
-				message = message + "No available Patient\n";
-			}
-		}
-		else if (random >= 10 && random < 20) {
-			message = "Moving SP from hospital[" + std::to_string(i) + "] to finish list PID: ";
-			Patient* free = hospitals[i]->FinishSP();
-			if (free) {
-				message = message + std::to_string(free->GetID()) + "\n";
-				FinishedRequest.enqueue(free);
-			}
-			else {
-				message = message + "No available Patient\n";
-			}
-		}
-		if (mode == 0) {
-			ui->PrintTimeStep(this, time, hospitals[i], message);
-			if (FinishedRequest.getCount() > 0) {
-				message = "Finished Requests: " + std::to_string(FinishedRequest.getCount()) + "\n";
-				ui->PrintMessage(message);
-			}
-		}
-		if (FinishedRequest.getCount() == numOfRequests) {
-			ui->PrintMessage("Finished Simulation");
-			return;
-		}
+	SendPatientsToHospital(time);
+	string msg = "";
+
+	this->SwitchOutToBack(time);
+	this->returnCar(time);
+	int failedcarid = FailOutCar(time);
+	if (failedcarid >= 0)
+	{
+		msg += "Failed CID: \t" + failedcarid;
 	}
 
-
+	for (int i = 0; i < hospitalNumber; i++)
+	{
+		ui->PrintTimeStep(this, time, hospitals[i], msg);
+	}
 }
 
 void Organiser::LoadFile()
@@ -272,7 +267,7 @@ void Organiser::Addout_Car(Car* car, int CurrentStep)
 {
 	//set arrival time takes timestep and add the time taken to reach hospital and return it 
 	
-	OutCars.enqueue(car, car->setArrivalTime(CurrentStep));
+	OutCars.enqueue(car, -car->setArrivalTime(CurrentStep));
 }
 
 //switch car from out to back updated
@@ -280,11 +275,11 @@ void Organiser::SwitchOutToBack(int CurrentStep)
 {
 	Car* car = nullptr;
 	int arrTime = -1;
-	while (OutCars.peek(car, arrTime) && arrTime == CurrentStep)
+	while (OutCars.peek(car, arrTime) && arrTime == -CurrentStep)
 	{
 		OutCars.dequeue(car, arrTime);
 		car->PickUpPatient(CurrentStep);
-		BackCars.enqueue(car, car->setArrivalTime(CurrentStep));
+		BackCars.enqueue(car, -car->setArrivalTime(CurrentStep));
 	}
 }
 
@@ -298,9 +293,9 @@ void Organiser::returnCar(int CurrentStep)
 {
 	Car* car = nullptr;
 	int arrTime = -1;
-	while (BackCars.peek(car, arrTime) && arrTime == CurrentStep) {
+	while (BackCars.peek(car, arrTime) && arrTime == -CurrentStep) {
 		BackCars.dequeue(car, arrTime);
-		
+		arrTime = -arrTime;
 		switch (car->GetStatus())
 		{
 		case CAR_STATUS::OUT_FAILED:
@@ -318,7 +313,7 @@ void Organiser::FinishPatient(Patient* p)
 {
 	if (p)
 	{
-		AllPatients.enqueue(p);
+		FinishedRequest.enqueue(p);
 	}
 }
 
@@ -364,7 +359,7 @@ int Organiser::FailOutCar(int currentTimeStep)
 	c->SetStatus(CAR_STATUS::OUT_FAILED);
 	c->setArrivalTime(currentTimeStep, c->getTimeTaken(currentTimeStep));
 	BackCars.enqueue(c, -c->getArrivalTime());
-	return 0;
+	return c->GetCarID();
 }
 
 void Organiser::ReturnCarsFromCheckUp(int time)
@@ -420,66 +415,11 @@ void Organiser::GenerateOutputFile(int timestep) {
 
 	}
 	Car* c1 = nullptr;
-	int t;
-	LinkedQueue<Car*> car1;
-	LinkedQueue<Car*> car2;
 
 	for (int i = 0; i < hospitalNumber; i++) {
-		car1 = hospitals[i]->GetFreeNormalCars();
-		car2 = hospitals[i]->GetFreeSpecialCars();
-		while (car1.dequeue(c1)) {
-			countcars++;
-			if (c1->GetType() == CAR_TYPE::NORMAL_CAR) {
-				ncc++;
-			}
-			else {
-				scc++;
 
-			}
-			totalbusytime += c1->getTotalBusyTime();
-
-
-		}
-		while (car2.dequeue(c1)) {
-			countcars++;
-			if (c1->GetType() == CAR_TYPE::NORMAL_CAR) {
-				ncc++;
-			}
-			else {
-				scc++;
-
-			}
-			totalbusytime += c1->getTotalBusyTime();
-
-
-		}
-
-
-	}
-	while (OutCars.dequeue(c1, t)) {
-		countcars++;
-
-		if (c1->GetType() == CAR_TYPE::NORMAL_CAR) {
-			ncc++;
-		}
-		else {
-			scc++;
-
-		}
-		totalbusytime += c1->getTotalBusyTime();
-
-	}
-	while (BackCars.dequeue(c1, t)) {
-		countcars++;
-		if (c1->GetType() == CAR_TYPE::NORMAL_CAR) {
-			ncc++;
-		}
-		else {
-			scc++;
-
-		}
-
-		totalbusytime += c1->getTotalBusyTime();
+		totalbusytime += hospitals[i]->CalculateBusyTimeAtEndOfSimulation(CAR_TYPE::NORMAL_CAR);
+		totalbusytime += hospitals[i]->CalculateBusyTimeAtEndOfSimulation(CAR_TYPE::SPECIAL_CAR);
 
 	}
 
@@ -496,4 +436,34 @@ void Organiser::GenerateOutputFile(int timestep) {
 	myfile.close();
 	std::cout << "File generation completed." << std::endl;
 
+}
+
+bool Organiser::SimulationFinished()
+{
+	return FinishedRequest.getCount() == numOfRequests;
+}
+
+void Organiser::MainSimulation()
+{
+	ReadInput();
+
+	int time = 0;
+	while (SimulationFinished() == false)
+	{
+		UpdateTimeStep(time);
+
+		time++;
+	}
+
+	GenerateOutputFile(time);
+}
+
+void Organiser::ReadInput()
+{
+	LoadFile();
+	ui->EnterProgramMode();
+}
+
+void Organiser::SendOutCars()
+{
 }

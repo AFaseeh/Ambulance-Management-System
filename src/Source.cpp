@@ -88,7 +88,10 @@ int main()
 	o = new Organiser();
 	//o->LoadFile();
 	//o->PrintInfo();
+	int time = 0;
+	o->ReadInput();
 
-	o->SimulatorFunc();
+	o->MainSimulation();
+	
 	return 0;
 }
