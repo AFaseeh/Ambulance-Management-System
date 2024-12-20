@@ -46,7 +46,7 @@ void UI::PrintTimeStep(Organiser* org, int time, Hospital* hospital, string mess
 	org->PrintInfo();
 	cout << "Enter any value to continue" << endl;
 
-	char ch = _getch();
+	//char ch = _getch();
 
 }
 
@@ -75,6 +75,14 @@ void UI::EnterProgramMode()
 		break;
 	}
 }
+std::string UI::GetOutputFileName()
+{
+	std::string fileName;
+	std::cout << "Enter the name of the output file: ";
+	std::cin >> fileName;
+	return fileName;
+}
+
 
 UI_MODE UI::GetProgramMode() const
 {

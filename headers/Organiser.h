@@ -12,11 +12,15 @@ private:
 	int** distanceMatrix;
 	int hospitalNumber;
 	int numOfRequests;
+	int numOfRedirectedEP;
+	int numOfNC;
+	int numOfSC;
 	UI* ui;
 	Hospital** hospitals;		// Array of pointers to Hospital objects
 	OutCarsPriQueue OutCars;
 	priQueue<Car*> BackCars;
 	LinkedQueue<CancelRequest*> CancelledRequest;
+	LinkedQueue<Patient*> CancelledPatients;
 	LinkedQueue<Patient*> FinishedRequest;
 	LinkedQueue<Patient*> AllPatients;
 
@@ -47,7 +51,6 @@ public:
 
 	int FailOutCar(int currentTimeStep);
 	void ReturnCarsFromCheckUp(int currentTimeStep);
-	void cancelRequest(int timestep);
 	void GenerateOutputFile(int timestep);
 
 	bool SimulationFinished();

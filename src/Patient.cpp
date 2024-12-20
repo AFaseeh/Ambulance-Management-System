@@ -11,6 +11,11 @@ int Patient::GetSeverity() const
 	return Severity;
 }
 
+void Patient::SetSeverity(int severity)
+{
+	this->Severity = severity;
+}
+
 int Patient::GetID() const
 {
 	return PatientID;

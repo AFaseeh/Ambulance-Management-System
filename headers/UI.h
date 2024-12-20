@@ -21,6 +21,7 @@ public:
 	void PrintTimeStep(Organiser* org, int time, Hospital* hospital, string message);
 	void PrintMessage(string message);
 	void EnterProgramMode();
+	std::string GetOutputFileName();
 	UI_MODE GetProgramMode() const;
 };
 
