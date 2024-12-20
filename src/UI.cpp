@@ -46,7 +46,7 @@ void UI::PrintTimeStep(Organiser* org, int time, Hospital* hospital, string mess
 	org->PrintInfo();
 	cout << "Enter any value to continue" << endl;
 
-	char ch = _getch();
+	//char ch = _getch();
 
 }
 

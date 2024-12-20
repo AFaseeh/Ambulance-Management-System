@@ -10,14 +10,15 @@ int Car::staticCheckUpSC = 0;
 Car::Car(CAR_TYPE type, int hospitalID, int cid) : carType(type), carStatus(CAR_STATUS::READY),
 assignedPatient(nullptr), HID(hospitalID), CID(cid), arrivalTime(0), startedTime(0), endCheckUpTime(0)
 {
-	totalBusyTime = 0;
 	if (type == CAR_TYPE::NORMAL_CAR)
 	{
 		speed = staticSpeedNC;
+		carCheckupTime = staticCheckUpNC;
 	}
 	else
 	{
 		speed = staticSpeedSC;
+		carCheckupTime = staticCheckUpSC;
 	}
 }
 
@@ -43,7 +44,7 @@ void Car::PickUpPatient(int currentTime)
 		return;
 
 	this->carStatus = CAR_STATUS::LOADED;
-	AddToStaticBusyTime(this->gettotaltime());	// busyTime += this->gettotaltime();
+	AddToStaticBusyTime(currentTime - startedTime);	// busyTime += this->gettotaltime();
 	assignedPatient->setPickUpTime(currentTime) ;
 	startedTime = currentTime;
 }
@@ -85,54 +86,19 @@ int Car::setArrivalTime(int time)
 	return arrivalTime;
 }
 
-void Car::setArrivalTime(int StartTime, int TimeTaken)
+void Car::setOutCarFailureArrivalTime(int current)
 {
-	startedTime = StartTime;
-	arrivalTime = StartTime + TimeTaken;
+	int time_taken = current - startedTime;
+	startedTime = current;
+	arrivalTime = current + time_taken;
 }
 
 int Car::gettotaltime() const
 {
 	//usedd
-	return assignedPatient->getDistance()/speed;
+	return std::ceil((float)assignedPatient->getDistance()/speed);
 }
 
-int Car::cancel(int current)
-{
-	//used
-	int time_taken = current - startedTime;
-	AddToStaticBusyTime(time_taken);	//busyTime += time_taken;
-	arrivalTime = current + time_taken;
-	startedTime = current;
-	return (arrivalTime);
-}
-
-void Car::SetStarted(int current)
-{
-	if (current >= startedTime)
-	{
-		startedTime = current;
-	}
-}
-
-int Car::GetStarted() const
-{
-	return startedTime;
-}
-
-
-int Car::getTimeTaken(int Current) const
-{
-	return Current-startedTime;
-}
-
-void Car::addBusyTime(int pickupTime, int finishTime) {
-	totalBusyTime += (finishTime - pickupTime);
-}
-
-int Car::getTotalBusyTime()  const {
-	return totalBusyTime;
-}
 int Car::GetHospitalID() const
 {
 	return HID;
@@ -190,24 +156,14 @@ void Car::SetStaticCheckUpNC(int time)
 	staticCheckUpNC = time;
 }
 
-int Car::GetStaticCheckUpNC()
-{
-	return staticCheckUpNC;
-}
-
 void Car::SetStaticCheckUpSC(int time)
 {
 	staticCheckUpSC = time;
 }
 
-int Car::GetStaticCheckUpSC()
+void Car::SetCheckUpTimeFinish(int StartTime)
 {
-	return staticCheckUpSC;
-}
-
-void Car::SetCheckUpTimeFinish(int StartTime, int TimeTaken)
-{
-	endCheckUpTime = StartTime + TimeTaken;
+	endCheckUpTime = StartTime + carCheckupTime;
 }
 
 int Car::GetCheckUpTimeFinish() const
@@ -222,15 +178,32 @@ Patient* Car::ReturnPatientToHospital()
 	return p;
 }
 
-int Car::GetSpeed() const
+int Car::GetCarCheckUpTime() const
 {
-	return speed;
+	return carCheckupTime;
+}
+
+Patient* Car::CancelPatient(int current)
+{
+	Patient* p = assignedPatient;
+	assignedPatient = nullptr;
+	carStatus = CAR_STATUS::PATIENT_CANCELLED;
+	int time_taken = current - startedTime;
+	startedTime = current;
+	arrivalTime = startedTime + time_taken;
+
+	return p;
 }
 
 std::ostream& operator<<(std::ostream& os, const Car& c)
 {
 	char Type = (c.carType == CAR_TYPE::NORMAL_CAR ? 'N' : 'S');
-	int pid = c.GetAssignedPatientID();
+	
+	int pid = -1;
+	if (c.assignedPatient != nullptr)
+	{
+		pid = c.GetAssignedPatientID();
+	}
 
 	// +1 to make it 1-indexed
 	std::cout << Type << c.CID << "_H" << c.HID << "_P" << pid;

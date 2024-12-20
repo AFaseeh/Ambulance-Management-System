@@ -2,7 +2,7 @@
 #include "../headers/Organiser.h"
 #include <iostream>
 
-Hospital::Hospital(Organiser* organiser, int id) : organiser(organiser) , hospitalID(id)
+Hospital::Hospital(Organiser* organiser, int id) : organiser(organiser) , hospitalID(id), checkUpTimeSC(0), checkUpTimeNC(0)
 {}
 
 Hospital::~Hospital()
@@ -39,12 +39,6 @@ Patient* Hospital::removepatient(int pid)
    return npQueue.cancelRequest(pid);
 }
 
-void Hospital::Assignpatient() {   //ay 7aga for now idk el switch case
-        AssignEP();
-        AssignSP();
-        AssignNP();
-}
-
 void Hospital::LoadCars(int sCars, int nCars)
 {
     for (int i = 0; i < sCars; i++)
@@ -62,6 +56,7 @@ void Hospital::LoadCars(int sCars, int nCars)
 
 void Hospital::CarBack(Car* car)
 {
+    car->SetStatus(CAR_STATUS::READY);
     if (car->GetType() == CAR_TYPE::NORMAL_CAR)
     {
         freeNormalCars.enqueue(car);
@@ -133,28 +128,6 @@ Car* Hospital::OutCar(CAR_TYPE type)
     return toreturn;
 }
 
-Patient* Hospital::FinishSP()
-{
-    Patient* toreturn = nullptr;
-    spQueue.dequeue(toreturn);
-    return toreturn;
-}
-
-Patient* Hospital::FinishEP()
-{
-    Patient* toreturn = nullptr;
-    int pri = -1;
-    epQueue.dequeue(toreturn, pri);
-    return toreturn;
-}
-
-Patient* Hospital::FinishNP()
-{
-    Patient* toreturn = nullptr;
-    npQueue.dequeue(toreturn);
-    return toreturn;
-}
-
 void Hospital::AssignHospitalPatientsToCars(int time)
 {
     Car* c = nullptr;
@@ -180,29 +153,6 @@ void Hospital::AssignHospitalPatientsToCars(int time)
     }
 }
 
-int Hospital::CalculateBusyTimeAtEndOfSimulation(CAR_TYPE type)
-{
-    Car* c = nullptr;
-    int totalbusytime = 0;
-    switch (type)
-    {
-    case CAR_TYPE::NORMAL_CAR:
-        while (freeNormalCars.dequeue(c)) {
-            totalbusytime += c->getTotalBusyTime();
-        }
-        break;
-    case CAR_TYPE::SPECIAL_CAR:
-        while (freeSpecialCars.dequeue(c)) {
-            totalbusytime += c->getTotalBusyTime();
-        }
-        break;
-    default:
-        break;
-    }
-    
-    return totalbusytime;
-}
-
 ostream& operator<<(ostream& os, const Hospital& h)
 {
     cout << "================= HOSPITAL #" << h.hospitalID << " data ====================" << endl;
@@ -218,6 +168,9 @@ ostream& operator<<(ostream& os, const Hospital& h)
 
     //Free cars
     cout << "Free Cars: " << h.freeSpecialCars.getCount() << " SCars, " << h.freeNormalCars.getCount() << " NCars" << endl;
+
+    //Check up List
+    cout << "Check Up: " << h.CheckUpList.getCount() << " "; h.CheckUpList.printList(); cout << endl;
 
     cout << "================= HOSPITAL #" << h.hospitalID << " data end ====================" << endl;
 

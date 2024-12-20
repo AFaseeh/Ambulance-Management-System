@@ -10,4 +10,3 @@ public:
 	int getCancelTime() const;
 	int getHID() const;
 };
-

@@ -4,13 +4,12 @@
 #include "../headers/Hospital.h"
 #include <iostream>
 #include <string>
-#include <iomanip>
 #include <fstream>
 
 using namespace std;
 
 Organiser::Organiser()
-	: numOfRequests(-1), hospitals(nullptr), hospitalNumber(-1), distanceMatrix(nullptr)
+	: numOfRequests(-1), hospitals(nullptr), hospitalNumber(-1), distanceMatrix(nullptr), numOfRedirectedEP(0), numOfNC(0), numOfSC(0)
 {
 	ui = new UI;
 }
@@ -37,9 +36,9 @@ void Organiser::UpdateTimeStep(int time)
 	{
 		hospitals[i]->CompleteCarsCheckUp(time);
 	}
-	//cancelRequest(time);
 
 	SendPatientsToHospital(time);
+	cancelRequest(time);
 	string msg = "";
 
 	int failedcarid = FailOutCar(time);
@@ -79,14 +78,19 @@ void Organiser::LoadFile()
 		hospitals[i] = new Hospital(this, i);
 	}
 
-    // Loading Speed of Cars
-    int speedSC, speedNC, outfailprobability;
-    fin >> speedSC >> speedNC;
-    fin >> outfailprobability;
+	// Loading Speed of Cars
+	int speedSC, speedNC;
+	fin >> speedSC >> speedNC;
     Car::SetStaticSpeedNC(speedNC);
     Car::SetStaticSpeedSC(speedSC);
-    Car::SetStaticOutFailProbability(outfailprobability);
 
+	// Loading Fail Probability And Check up time
+	int outfailprobability, checkupTimeNC, checkupTimeSC;
+	fin >> outfailprobability;
+	fin >> checkupTimeSC >> checkupTimeNC;
+	Car::SetStaticOutFailProbability(outfailprobability);
+	Car::SetStaticCheckUpNC(checkupTimeNC);
+	Car::SetStaticCheckUpSC(checkupTimeSC);
 
 	// Distance Matrix of size (hospitalNum * hospitalNum)
 	distanceMatrix = new int* [hospitalNumber];
@@ -106,13 +110,14 @@ void Organiser::LoadFile()
 		int scars, ncars;
 		fin >> scars >> ncars;
 		hospitals[i]->LoadCars(scars, ncars);
+		numOfNC += ncars;
+		numOfSC += scars;
 	}
 
 	// Patients
 	int patientsNum;
 	fin >> patientsNum;
 	numOfRequests = patientsNum;
-	int* hID_patient = new int[patientsNum];
 	for (int i = 0; i < patientsNum; i++)
 	{
 		int reqTime, PID, HID, distance, severity = -1;
@@ -121,7 +126,6 @@ void Organiser::LoadFile()
 
 		fin >> patientType >> reqTime >> PID >> HID >> distance;
 		HID--; // 0 indexed
-		hID_patient[i] = HID;
 		if (strcmp(patientType.c_str(), "NP") == 0)
 		{
 			type = PATIENT_TYPE::NP;
@@ -144,10 +148,11 @@ void Organiser::LoadFile()
 
 	for (int i = 0; i < cancelNum; i++)
 	{
-		int PID, cancelTime;
-		fin >> PID >> cancelTime;
+		int PID, cancelTime, cancelHid;
+		fin >> cancelTime >> PID >> cancelHid;
+		cancelHid--; // zero indexed;
 
-		CancelRequest* req = new CancelRequest(PID, cancelTime, hID_patient[PID]);
+		CancelRequest* req = new CancelRequest(PID, cancelTime, cancelHid);
 		CancelledRequest.enqueue(req);
 	}
 }
@@ -191,8 +196,8 @@ void Organiser::returnCar(int CurrentStep)
 			hospitals[car->GetHospitalID()]->FailedCarBack(car, CurrentStep);
 			break;	
 		default:
-			hospitals[car->GetHospitalID()]->CarBack(car);
 			FinishPatient(car->DropOffPatient(CurrentStep));
+			hospitals[car->GetHospitalID()]->CarBack(car);
 			break;
 		}
 	}
@@ -214,6 +219,7 @@ void Organiser::PrintInfo()
 	std::cout << BackCars.getCount() << " ==> Back cars: "; BackCars.printList(); cout << endl;
 	std::cout << "----------------------------------------" << endl;
 	std::cout << FinishedRequest.getCount() << " finished patients: "; FinishedRequest.printList(); cout << endl;
+	std::cout << CancelledPatients.getCount() << " cancelled patients: "; CancelledPatients.printList(); cout << endl;
 }
 
 void Organiser::SendPatientsToHospital(int time)
@@ -249,6 +255,7 @@ void Organiser::SendPatientToNearestHospital(Patient* p, int distance)
 			p->SetHID(i);
 		}
 	}
+	numOfRedirectedEP++;
 	p->SetDistance(min + distance);
 	hospitals[p->GetHID()]->addpatient(p);
 }
@@ -271,7 +278,7 @@ int Organiser::FailOutCar(int currentTimeStep)
 
 
 	c->SetStatus(CAR_STATUS::OUT_FAILED);
-	c->setArrivalTime(currentTimeStep, c->getTimeTaken(currentTimeStep));
+	c->setOutCarFailureArrivalTime(currentTimeStep);
 	BackCars.enqueue(c, -c->getArrivalTime());
 	return c->GetCarID();
 }
@@ -288,7 +295,7 @@ void Organiser::ReturnCarsFromCheckUp(int time)
 void Organiser::cancelRequest(int timestep)
 {
 	CancelRequest* req;
-	while (CancelledRequest.peek(req) && req->getCancelTime() == -timestep)
+	while (CancelledRequest.peek(req) && req->getCancelTime() == timestep)
 	{
 		CancelledRequest.dequeue(req);
 
@@ -296,7 +303,19 @@ void Organiser::cancelRequest(int timestep)
 		if (!p)
 		{
 			Car* car = OutCars.cancelRequest(req->getPID());
-			BackCars.enqueue(car, car->cancel(timestep));
+			if (car)
+			{
+				numOfRequests--;
+				p = car->CancelPatient(timestep);
+				BackCars.enqueue(car, -car->getArrivalTime());
+
+				CancelledPatients.enqueue(p);
+			}
+		}
+		else
+		{
+			numOfRequests--;
+			CancelledPatients.enqueue(p);
 		}
 
 	}
@@ -310,14 +329,13 @@ void Organiser::GenerateOutputFile(int timestep) {
 		return;
 	}
 
-	myfile << "FT   PID    QT     WT    STATUS\n";
+	myfile << "FT\tPID\tQT\tWT\tSTATUS\n";
 	int npc = 0, spc = 0, epc = 0;
-	int ncc = 0, scc = 0;
+	int ncc = numOfNC, scc = numOfSC;
+	int countcars = numOfNC + numOfSC;
 
-	int totalWaitTime = 0, totalBusyTime = 0;
-	int countcars = 0;
-	int totalbusytime = 0;
-	std::string status;
+	int totalWaitTime = 0;
+	int totalBusyTime = 0;
 	while (!FinishedRequest.isEmpty()) {
 
 		Patient* p1;
@@ -329,45 +347,38 @@ void Organiser::GenerateOutputFile(int timestep) {
 		if (p1->GetType() == PATIENT_TYPE::EP) epc++;
 		totalWaitTime += waitTime;
 		if (p1->GetPickUpTime() != -1) {
-			status = "PICKED";
-			myfile << std::setw(8) << p1->GetPickUpTime()
-				<< std::setw(8) << p1->GetID()
-				<< std::setw(8) << p1->GetRequestTime()
-				<< std::setw(8) << waitTime
-				<< std::setw(12) << status << "\n";
+			myfile << p1->GetPickUpTime()
+				<< "\t" << p1->GetID()
+				<< "\t" << p1->GetRequestTime()
+				<< "\t" << waitTime
+				<< "\n";
 		}
 		else {
-			status = "NO CAR";
-			myfile << std::left << std::setw(8) << "N/A"
-				<< std::setw(8) << p1->GetID()
-				<< std::setw(8) << p1->GetRequestTime()
-				<< std::setw(8) << "N/A"
-				<< std::setw(12) << status << "\n";
+			myfile << std::left << "\t" << "N/A"
+				<< "\t" << p1->GetID()
+				<< "\t" << p1->GetRequestTime()
+				<< "\t" << "N/A"
+				<< "\n";
 		}
-
-	}
-	Car* c1 = nullptr;
-
-	for (int i = 0; i < hospitalNumber; i++) {
-
-		totalbusytime += hospitals[i]->CalculateBusyTimeAtEndOfSimulation(CAR_TYPE::NORMAL_CAR);
-		totalbusytime += hospitals[i]->CalculateBusyTimeAtEndOfSimulation(CAR_TYPE::SPECIAL_CAR);
-
+		
 	}
 
+	totalBusyTime = Car::GetStaticBusyTime();
+
+	int redirectedEP = numOfRedirectedEP;
 	int totalPatients = npc + spc + epc;
 	myfile << "patients: " << totalPatients << "   "
 		<< "[NP: " << npc << ", SP: " << spc << ", EP: " << epc << "]\n";
-	myfile << "hospitals: " << hospitalNumber - 1 << '\n';
+	myfile << "hospitals: " << hospitalNumber << '\n';
 	myfile << "Cars: " << countcars << "   "
 		<< "[Scar: " << scc << ", NCar: " << ncc  << "]\n";
-	myfile << "Avg wait Time: " << (totalPatients > 0 ? totalWaitTime / totalPatients : 0) << '\n';
-	myfile << "Avg busy time: " << (countcars > 0 ? totalbusytime / countcars : 0) << '\n';
-	myfile << "Avg utilization time: " << (totalbusytime > 0 ? (totalbusytime / timestep) * 100 : 0) << "%" << '\n';
+	myfile << "Avg wait Time: " << (totalPatients > 0 ? (float)totalWaitTime / totalPatients : 0) << '\n';
+	myfile << "Redirected EP%: " << ( numOfRedirectedEP > 0 ? ((float)numOfRedirectedEP / epc) * 100 : 0) << "%" << '\n';
+	myfile << "Avg busy time: " << (countcars > 0 ? (float)totalBusyTime / countcars : 0) << '\n';
+	myfile << "Avg utilization time: " << (totalBusyTime > 0 ? ((float)totalBusyTime / (timestep * countcars)) * 100 : 0) << "%" << '\n';
 
 	myfile.close();
 	std::cout << "File generation completed." << std::endl;
-
 }
 
 bool Organiser::SimulationFinished()

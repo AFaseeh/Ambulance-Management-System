@@ -12,8 +12,10 @@ Patient* NPatientQueue::cancelRequest(int pid)
 	{
 		Node<Patient*>* todelete = frontPtr;
 		frontPtr = frontPtr->getNext();
+		patient = todelete->getItem();
 		delete todelete;
-		return (p->getItem());
+		count--;
+		return patient;
 	}
 
 	while (p->getNext())
@@ -24,6 +26,7 @@ Patient* NPatientQueue::cancelRequest(int pid)
 			patient = p->getNext()->getItem();
 			p->setNext(p->getNext()->getNext());
 			delete todelete;
+			count--;
 			return patient;
 		}
 		p = p->getNext();
@@ -51,11 +54,13 @@ void NPatientQueue::InsertAtBeginning(Patient* p)
 	{
 		frontPtr = newNodePtr; // The queue is empty
 		backPtr = newNodePtr;
+		count++;
 	}
 	else 
 	{
 		newNodePtr->setNext(frontPtr);	// The queue was not empty
-		frontPtr = newNodePtr; 
+		frontPtr = newNodePtr;
+		count++;
 	}
 
 	count++;

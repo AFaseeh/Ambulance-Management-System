@@ -19,13 +19,14 @@ private:
 	LinkedQueue<Car*> freeNormalCars;
 	CheckUpQueue CheckUpList;
 	int hospitalID; // 0-indexed
+	int checkUpTimeSC;
+	int checkUpTimeNC;
 
 public:
 	Hospital(Organiser* organiser, int id);
 	~Hospital();
 	void addpatient(Patient* t);
 	Patient* removepatient(int pid);
-	void Assignpatient();
 	void LoadCars(int sCars, int nCars);
 	
 	friend ostream& operator<<(ostream& os, const Hospital& h);
@@ -35,16 +36,10 @@ public:
 	void CompleteCarsCheckUp(int timestep);
 	void ReassignPatientToHospital(Patient* p);
 	Car* OutCar(CAR_TYPE type);
-	Patient* FinishSP();
-	Patient* FinishEP();
-	Patient* FinishNP();
 
 	//assigning paitents
 	void AssignHospitalPatientsToCars(int time);
 	Car* AssignNP();
 	Car* AssignSP();
 	Car* AssignEP();
-	
-	int CalculateBusyTimeAtEndOfSimulation(CAR_TYPE type);
-
 };

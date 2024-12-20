@@ -14,9 +14,10 @@ Car* OutCarsPriQueue::cancelRequest(int pid)
 	{
 		priNode<Car*>* todelete = head;
 		head = head->getNext();
+		car = todelete->getItem(trashcan);
 		delete todelete;
 		count--;
-		return (p->getItem(trashcan));
+		return car;
 	}
 
 	while (p->getNext())

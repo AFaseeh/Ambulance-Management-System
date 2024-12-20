@@ -11,7 +11,8 @@ enum class CAR_STATUS
 	ASSIGNED,
 	LOADED,
 	IN_CHECKUP,
-	OUT_FAILED
+	OUT_FAILED,
+	PATIENT_CANCELLED
 };
 
 
@@ -30,19 +31,18 @@ class Car
 
 private:
 	CAR_TYPE carType;
-		int totalBusyTime;
-
 	CAR_STATUS carStatus;
 	Patient* assignedPatient;
-	static int staticBusyTime;
 	int startedTime;
 	int arrivalTime; //time at which car arrives at hospital
 	int HID;	// 0-indexed	
 	int CID;	// 0-indexed
 	int speed;
 	int endCheckUpTime;
-	static int staticSpeedNC;
+	int carCheckupTime;
 
+	static int staticBusyTime;
+	static int staticSpeedNC;
 	static int staticSpeedSC;
 	static int staticOutFailProbability;
 	static int staticCheckUpNC;
@@ -56,20 +56,16 @@ public:
 	Patient* DropOffPatient(int current);	// Car status ->Ready
 	CAR_TYPE GetType() const;
 	CAR_STATUS GetStatus() const;
-	int getArrivalTime() const;
+
 	int setArrivalTime(int time);
-	void setArrivalTime(int StartTime, int TimeTaken);
+	int getArrivalTime() const;
+
 	int gettotaltime() const;
-	int cancel(int current);
-	void SetStarted(int current);
-	int GetStarted() const;
-	int getTimeTaken(int Current) const;	// Time taken from StartTime to CurrentTimeStep
+
 	int GetHospitalID() const;
 	int GetAssignedPatientID() const;
 	int GetCarID() const;
-	void addBusyTime(int pickupTime, int finishTime);
-	int getTotalBusyTime() const;
-	//int getTimestepLeft(int ) ;
+
 	friend std::ostream& operator<<(std::ostream& os, const Car& c);
 
 	// Static functions
@@ -80,18 +76,15 @@ public:
 	static void AddToStaticBusyTime(int time);
 	static int GetStaticBusyTime();
 	static void SetStaticCheckUpNC(int time);
-	static int GetStaticCheckUpNC();
 	static void SetStaticCheckUpSC(int time);
-	static int GetStaticCheckUpSC();
 
 	// Car Check up
-	void SetCheckUpTimeFinish(int StartTime, int TimeTaken);
+	void SetCheckUpTimeFinish(int StartTime);
 	int GetCheckUpTimeFinish() const;
 	Patient* ReturnPatientToHospital();
+	int GetCarCheckUpTime() const;
+	void setOutCarFailureArrivalTime(int StartTime);
 		 
-
-	int GetSpeed() const;
-
-	// Out car failed
+	Patient* CancelPatient(int time);
 };
 

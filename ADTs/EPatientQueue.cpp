@@ -6,6 +6,7 @@ void EPatientQueue::InsertAtBeginning(Patient* p)
     if (head != nullptr && head->getPri() >= pri)
     {
         pri = head->getPri() + 1;
+        p->SetSeverity(pri);
     }
 
     priNode<Patient *>* newNode = new priNode<Patient *>(p, pri);

@@ -19,17 +19,19 @@ void CheckUpQueue::AddCarToCheckUp(Car* toAddCar, int currentTime)
 
 	toAddCar->SetStatus(CAR_STATUS::IN_CHECKUP);
 
+	toAddCar->SetCheckUpTimeFinish(currentTime);
+	int finishCheckup = toAddCar->GetCheckUpTimeFinish();
 
-	enqueue(toAddCar);
-	toAddCar->SetCheckUpTimeFinish(currentTime, checkupTime);
+	enqueue(toAddCar, -(finishCheckup));
 }
 
 Car* CheckUpQueue::ReturnCarFromCheckUp(int currentTime)
 {
 	Car* c = nullptr;
-	if (isEmpty() == false && peek(c) && c->GetCheckUpTimeFinish() == currentTime)
+	int pri = -1;
+	if (isEmpty() == false && peek(c, pri) && c->GetCheckUpTimeFinish() == currentTime)
 	{
-		dequeue(c);
+		dequeue(c, pri);
 	}
 	else
 	{

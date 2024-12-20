@@ -1,17 +1,16 @@
 #pragma once
-#include "LinkedQueue.h"
+#include "priQueue.h"
 #include "../headers/Car.h"
 
-class CheckUpQueue : public LinkedQueue<Car*>
+class CheckUpQueue : public priQueue<Car*>
 {
 private:
 	int checkupTime;
 public:
-	using LinkedQueue<Car*>::LinkedQueue; //inheriting Base constructor
+	using priQueue<Car*>::priQueue; //inheriting Base constructor
 	CheckUpQueue();
 	void SetCheckUpTime(int time);
 	void AddCarToCheckUp(Car* toAddCar, int currentTime);
 	Car* ReturnCarFromCheckUp(int currentTime);
-
 };
 

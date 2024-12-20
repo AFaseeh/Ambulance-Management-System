@@ -24,6 +24,7 @@ private:
 public:
 	Patient(PATIENT_TYPE type, int PID, int HID, int distance, int requestTime,int severity = 0);
 	int GetSeverity() const;
+	void SetSeverity(int severity);
 	int GetID() const;
 	PATIENT_TYPE GetType() const;
 	void setPickUpTime(int time);

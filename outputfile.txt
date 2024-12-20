@@ -1,6 +1,0 @@
-FT   PID    QT     WT    STATUS
-patients: 0   [NP: 0, SP: 0, EP: 0]
-hospitals: 5
-Avg wait Time: 0
-Avg busy time: 0
-Avg utilization time: 0%
