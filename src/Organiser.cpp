@@ -314,11 +314,12 @@ void Organiser::returnCar(int CurrentStep)
 	}
 }
 
+
 void Organiser::FinishPatient(Patient* p)
 {
 	if (p)
 	{
-		AllPatients.enqueue(p);
+		FinishedRequest.enqueue(p);
 	}
 }
 
@@ -372,6 +373,24 @@ void Organiser::ReturnCarsFromCheckUp(int time)
 	for (int i = 0; i < hospitalNumber; i++)
 	{
 		hospitals[i]->CompleteCarsCheckUp(time);
+	}
+}
+
+//cancel request updated
+void Organiser::cancelRequest(int timestep)
+{
+	CancelRequest* req;
+	while (CancelledRequest.peek(req) && req->getCancelTime() == -timestep)
+	{
+		CancelledRequest.dequeue(req);
+
+		Patient* p = hospitals[req->getHID()]->removepatient(req->getPID());
+		if (!p)
+		{
+			Car* car = OutCars.cancelRequest(req->getPID());
+			BackCars.enqueue(car, car->cancel(timestep));
+		}
+
 	}
 }
 
