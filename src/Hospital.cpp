@@ -207,7 +207,6 @@ void Hospital::AssignEP() {
     }
     else
     {
-        
-        organiser->Sendpatient(p,this->hospitalID);
+        organiser->Sendpatient(p,p->getDistance());
     }
 }
