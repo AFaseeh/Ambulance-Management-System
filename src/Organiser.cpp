@@ -235,6 +235,7 @@ void Organiser::SendPatientToNearestHospital(Patient* p, int distance)
 	if (hospitalNumber == 1)
 	{
 			hospitals[p->GetHID()]->addpatient(p);
+			return;
 	}
 
 	int next_hosital = (p->GetHID() + 1) % hospitalNumber;
