@@ -264,25 +264,23 @@ Car* Hospital::AssignEP() {
         return nullptr;
     }
 
+    epQueue.dequeue(p, pri);
+
     if (!freeNormalCars.isEmpty())
     {
-        epQueue.dequeue(p,pri);
-
         freeNormalCars.dequeue(c);
 
         c->AssignPatient(p, p->GetRequestTime());
     }
     else if (!freeSpecialCars.isEmpty())
     {
-        epQueue.dequeue(p, pri);
-
         freeSpecialCars.dequeue(c);
 
         c->AssignPatient(p, p->GetRequestTime());
     }
     else
     {
-        organiser->SendPatientToNearestHospital(p,this->hospitalID);
+        organiser->SendPatientToNearestHospital(p, p->getDistance());
         c = nullptr;
     }
 
