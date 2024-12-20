@@ -47,7 +47,7 @@ public:
 
 	int FailOutCar(int currentTimeStep);
 	void ReturnCarsFromCheckUp(int currentTimeStep);
-  
+	void cancelRequest(int timestep);
 	void GenerateOutputFile(int timestep);
 
 	bool SimulationFinished();
