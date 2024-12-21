@@ -21,6 +21,7 @@ private:
 	int hospitalID; // 0-indexed
 	int checkUpTimeSC;
 	int checkUpTimeNC;
+	int epCount;
 
 public:
 	Hospital(Organiser* organiser, int id);
@@ -39,6 +40,7 @@ public:
 
 	//assigning paitents
 	void AssignHospitalPatientsToCars(int time);
+	int getEPcount();
 	Car* AssignNP();
 	Car* AssignSP();
 	Car* AssignEP();

@@ -238,27 +238,58 @@ void Organiser::SendPatientsToHospital(int time)
 
 void Organiser::SendPatientToNearestHospital(Patient* p, int distance)
 {
-	//int newHID;
+
+
+	int min = std::numeric_limits<int>::max();
 	if (hospitalNumber == 1)
 	{
-			hospitals[p->GetHID()]->addpatient(p);
-			return;
+		hospitals[p->GetHID()]->addpatient(p);
+		return;
 	}
 
 	int next_hosital = (p->GetHID() + 1) % hospitalNumber;
-	int min = distanceMatrix[p->GetHID()][next_hosital];
+	int minp = hospitals[p->GetHID()]->getEPcount();
+	int mind = distanceMatrix[p->GetHID()][next_hosital];
 	for (int i = 0; i < hospitalNumber; i++)
 	{
-		if (distanceMatrix[p->GetHID()][i] < min && distanceMatrix[p->GetHID()][i] != 0)
-		{
-			min = distanceMatrix[p->GetHID()][i];
+		if (hospitals[i]->getEPcount() < minp) {
+			minp = hospitals[i]->getEPcount();
 			p->SetHID(i);
+		}
+		else if (hospitals[i]->getEPcount() == minp) {
+			if (distanceMatrix[p->GetHID()][i] < mind && distanceMatrix[p->GetHID()][i] != 0)
+			{
+				p->SetDistance(distanceMatrix[p->GetHID()][i] + distance);
+				minp = hospitals[i]->getEPcount();
+				p->SetHID(i);
+			}
+
 		}
 	}
 	numOfRedirectedEP++;
-	p->SetDistance(min + distance);
 	hospitals[p->GetHID()]->addpatient(p);
-}
+	return;
+	//int newHID;
+	//if (hospitalNumber == 1)
+	//{
+	//		hospitals[p->GetHID()]->addpatient(p);
+	//		return;
+	//}
+
+	//int next_hosital = (p->GetHID() + 1) % hospitalNumber;
+	//int min = distanceMatrix[p->GetHID()][next_hosital];
+	//for (int i = 0; i < hospitalNumber; i++)
+	//{
+	//	if (distanceMatrix[p->GetHID()][i] < min && distanceMatrix[p->GetHID()][i] != 0)
+	//	{
+	//		min = distanceMatrix[p->GetHID()][i];
+	//		p->SetHID(i);
+	//	}
+	//}
+	//numOfRedirectedEP++;
+	//p->SetDistance(min + distance);
+	//hospitals[p->GetHID()]->addpatient(p);
+};
 
 int Organiser::FailOutCar(int currentTimeStep)
 {

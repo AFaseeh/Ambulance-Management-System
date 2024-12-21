@@ -2,7 +2,7 @@
 #include "../headers/Organiser.h"
 #include <iostream>
 
-Hospital::Hospital(Organiser* organiser, int id) : organiser(organiser) , hospitalID(id), checkUpTimeSC(0), checkUpTimeNC(0)
+Hospital::Hospital(Organiser* organiser, int id) : organiser(organiser),epCount(0), hospitalID(id), checkUpTimeSC(0), checkUpTimeNC(0)
 {}
 
 Hospital::~Hospital()
@@ -238,4 +238,9 @@ Car* Hospital::AssignEP() {
     }
 
     return c;
+}
+
+int Hospital::getEPcount() {
+
+    return epCount;
 }
