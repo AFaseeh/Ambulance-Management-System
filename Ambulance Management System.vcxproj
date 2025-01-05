@@ -133,7 +133,6 @@
     <ClCompile Include="ADTs\NPatientQueue.cpp" />
     <ClCompile Include="ADTs\OutCarsPriQueue.cpp" />
     <ClCompile Include="ADTs\SPatientQueue.cpp" />
-    <ClCompile Include="old code.cpp" />
     <ClCompile Include="src\CancelRequest.cpp" />
     <ClCompile Include="src\Car.cpp" />
     <ClCompile Include="src\Hospital.cpp" />

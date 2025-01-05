@@ -18,7 +18,7 @@ string UI::Loadfile()
 	cin >> fname;
 	if (strcmp("-1", fname.c_str()) == 0)
 	{
-		fname = "Test1";
+		fname = "testcase1";
 	}
 
 	return ("./TextFiles/Input/" + fname + ".txt");
@@ -46,7 +46,7 @@ void UI::PrintTimeStep(Organiser* org, int time, Hospital* hospital, string mess
 	org->PrintInfo();
 	cout << "Enter any value to continue" << endl;
 
-	//char ch = _getch();
+	char ch = _getch();
 
 }
 

@@ -238,7 +238,6 @@ void Organiser::SendPatientsToHospital(int time)
 
 void Organiser::SendPatientToNearestHospital(Patient* p, int distance)
 {
-	//int newHID;
 	if (hospitalNumber == 1)
 	{
 			hospitals[p->GetHID()]->addpatient(p);
@@ -258,7 +257,8 @@ void Organiser::SendPatientToNearestHospital(Patient* p, int distance)
 	numOfRedirectedEP++;
 	p->SetDistance(min + distance);
 	hospitals[p->GetHID()]->addpatient(p);
-}
+	return;
+};
 
 int Organiser::FailOutCar(int currentTimeStep)
 {
@@ -329,7 +329,7 @@ void Organiser::GenerateOutputFile(int timestep) {
 		return;
 	}
 
-	myfile << "FT\tPID\tQT\tWT\tSTATUS\n";
+	myfile << "FT\tPID\tQT\tWT\n";
 	int npc = 0, spc = 0, epc = 0;
 	int ncc = numOfNC, scc = numOfSC;
 	int countcars = numOfNC + numOfSC;

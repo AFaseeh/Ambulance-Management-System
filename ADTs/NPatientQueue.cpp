@@ -12,19 +12,25 @@ Patient* NPatientQueue::cancelRequest(int pid)
 	{
 		Node<Patient*>* todelete = frontPtr;
 		frontPtr = frontPtr->getNext();
+		if (todelete == backPtr)
+			backPtr = nullptr;
 		patient = todelete->getItem();
 		delete todelete;
 		count--;
 		return patient;
 	}
 
-	while (p->getNext())
+	while (p && p->getNext())
 	{
-		if (p->getNext()->getItem()->GetID() == pid)
+		Node<Patient*>* nextNode = p->getNext();
+		if (nextNode->getItem()->GetID() == pid)
 		{
-			Node<Patient*>* todelete = p->getNext();
-			patient = p->getNext()->getItem();
-			p->setNext(p->getNext()->getNext());
+			Node<Patient*>* todelete = nextNode;
+			if (todelete == backPtr)
+				backPtr = p;
+
+			patient = todelete->getItem();
+			p->setNext(todelete->getNext());
 			delete todelete;
 			count--;
 			return patient;
